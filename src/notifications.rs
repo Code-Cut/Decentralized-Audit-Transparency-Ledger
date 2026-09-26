@@ -5,13 +5,11 @@
 //! Unsubscribe / resubscribe, channel-endpoint registry, delivery history,
 //! bounce tracking, and aggregate stats are all on-chain.
 
-use soroban_sdk::{
-    contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec,
-};
+use soroban_sdk::{contractimpl, contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec};
 
 use crate::{AuditLedger, AuditLedgerArgs, AuditLedgerClient, ContractError, DataKey};
 
-// ── Digest schedule ──────────────────────────────────────────────────────────
+// Digest schedule
 
 /// How often to bundle matching events into a digest.
 #[contracttype]
@@ -29,7 +27,7 @@ pub enum DigestPreference {
     None = 4,
 }
 
-// ── Delivery channel ─────────────────────────────────────────────────────────
+// Delivery channel
 
 /// Transport channel for notification delivery.
 #[contracttype]
@@ -41,7 +39,7 @@ pub enum DeliveryChannel {
     Webhook = 3,
 }
 
-// ── Per-channel preference record ────────────────────────────────────────────
+// Per-channel preference record
 
 /// A single channel+digest preference entry for one subscriber.
 #[contracttype]
@@ -73,7 +71,7 @@ pub struct NotificationPreference {
     pub updated_at: u64,
 }
 
-// ── Digest batch record ───────────────────────────────────────────────────────
+// Digest batch record
 
 /// A queued or delivered digest batch.
 #[contracttype]
@@ -95,7 +93,7 @@ pub struct DigestBatch {
     pub delivered: bool,
 }
 
-// ── Delivery history entry ────────────────────────────────────────────────────
+// Delivery history entry
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -110,7 +108,7 @@ pub struct DeliveryRecord {
     pub consecutive_failures: u32,
 }
 
-// ── Notification statistics ───────────────────────────────────────────────────
+// Notification statistics
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -121,14 +119,15 @@ pub struct NotificationStats {
     pub total_bounced: u32,
 }
 
-// ── DataKey extensions (issue #409) — stored as associated functions ─────────
+// DataKey extensions (issue #409) — stored as associated functions
 // We piggy-back on the existing DataKey enum by using the free-form Bytes
 // storage slot via raw key helpers (serialise our own compound key).  This
 // avoids touching the DataKey enum while staying within the single-crate
 // constraint.
 
+#[contractimpl]
 impl AuditLedger {
-    // ── Public API ───────────────────────────────────────────────────────────
+    // Public API
 
     /// Register or update notification preferences for a subscriber / event-type
     /// pair.  The subscriber must authorise the call.
@@ -169,17 +168,17 @@ impl AuditLedger {
     pub fn unsubscribe(env: Env, subscriber: Address, event_type: Symbol) {
         subscriber.require_auth();
         let key = Self::notif_pref_key(&env, &subscriber, &event_type);
-        let mut pref: NotificationPreference = env
-            .storage()
-            .instance()
-            .get(&key)
-            .unwrap_or_else(|| NotificationPreference {
-                subscriber: subscriber.clone(),
-                event_type: event_type.clone(),
-                channels: Vec::new(&env),
-                unsubscribed: false,
-                updated_at: 0,
-            });
+        let mut pref: NotificationPreference =
+            env.storage()
+                .instance()
+                .get(&key)
+                .unwrap_or_else(|| NotificationPreference {
+                    subscriber: subscriber.clone(),
+                    event_type: event_type.clone(),
+                    channels: Vec::new(&env),
+                    unsubscribed: false,
+                    updated_at: 0,
+                });
         pref.unsubscribed = true;
         pref.updated_at = env.ledger().timestamp();
         // Deactivate all channels
@@ -201,11 +200,7 @@ impl AuditLedger {
     pub fn resubscribe(env: Env, subscriber: Address, event_type: Symbol) {
         subscriber.require_auth();
         let key = Self::notif_pref_key(&env, &subscriber, &event_type);
-        if let Some(mut pref) = env
-            .storage()
-            .instance()
-            .get::<_, NotificationPreference>(&key)
-        {
+        if let Some(mut pref) = env.storage().instance().get::<_, NotificationPreference>(&key) {
             pref.unsubscribed = false;
             pref.updated_at = env.ledger().timestamp();
             env.storage().instance().set(&key, &pref);
@@ -235,26 +230,14 @@ impl AuditLedger {
         let total = Self::total_events(env.clone());
         let mut event_ids: Vec<BytesN<32>> = Vec::new(&env);
         for i in 0..total {
-            let id: BytesN<32> = env
-                .storage()
-                .instance()
-                .get(&DataKey::EventOrder(i))
-                .unwrap();
-            let evt: crate::Event = env
-                .storage()
-                .instance()
-                .get(&DataKey::EventData(id.clone()))
-                .unwrap();
+            let id: BytesN<32> = env.storage().instance().get(&DataKey::EventOrder(i)).unwrap();
+            let evt: crate::Event = env.storage().instance().get(&DataKey::EventData(id.clone())).unwrap();
             if evt.timestamp >= since_timestamp && evt.event_type == event_type {
                 event_ids.push_back(id);
             }
         }
 
-        let batch_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::NotifBatchCount)
-            .unwrap_or(0);
+        let batch_id: u32 = env.storage().instance().get(&DataKey::NotifBatchCount).unwrap_or(0);
         let batch = DigestBatch {
             id: batch_id,
             subscriber: subscriber.clone(),
@@ -266,12 +249,8 @@ impl AuditLedger {
             delivered_at: 0,
             delivered: false,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::NotifBatch(batch_id), &batch);
-        env.storage()
-            .instance()
-            .set(&DataKey::NotifBatchCount, &(batch_id + 1));
+        env.storage().instance().set(&DataKey::NotifBatch(batch_id), &batch);
+        env.storage().instance().set(&DataKey::NotifBatchCount, &(batch_id + 1));
         env.events().publish(
             (Symbol::new(&env, "notif"), Symbol::new(&env, "batch_created")),
             (batch_id, subscriber, event_type),
@@ -280,12 +259,7 @@ impl AuditLedger {
     }
 
     /// Mark a digest batch as delivered (off-chain relay callback).
-    pub fn record_delivery(
-        env: Env,
-        caller: Address,
-        batch_id: u32,
-        success: bool,
-    ) {
+    pub fn record_delivery(env: Env, caller: Address, batch_id: u32, success: bool) {
         caller.require_auth();
         Self::require_owner_or_multisig(&env, &caller);
 
@@ -301,16 +275,16 @@ impl AuditLedger {
         env.storage().instance().set(&key, &batch);
 
         // Update stats
-        let mut stats: NotificationStats = env
-            .storage()
-            .instance()
-            .get(&DataKey::NotifStats)
-            .unwrap_or(NotificationStats {
-                total_batches: 0,
-                total_delivered: 0,
-                total_failed: 0,
-                total_bounced: 0,
-            });
+        let mut stats: NotificationStats =
+            env.storage()
+                .instance()
+                .get(&DataKey::NotifStats)
+                .unwrap_or(NotificationStats {
+                    total_batches: 0,
+                    total_delivered: 0,
+                    total_failed: 0,
+                    total_bounced: 0,
+                });
         if success {
             stats.total_delivered = stats.total_delivered.saturating_add(1);
             // Reset consecutive-failure counter on success
@@ -350,22 +324,20 @@ impl AuditLedger {
     pub fn report_bounce(env: Env, caller: Address, batch_id: u32) {
         caller.require_auth();
         Self::require_owner_or_multisig(&env, &caller);
-        let mut stats: NotificationStats = env
-            .storage()
-            .instance()
-            .get(&DataKey::NotifStats)
-            .unwrap_or(NotificationStats {
-                total_batches: 0,
-                total_delivered: 0,
-                total_failed: 0,
-                total_bounced: 0,
-            });
+        let mut stats: NotificationStats =
+            env.storage()
+                .instance()
+                .get(&DataKey::NotifStats)
+                .unwrap_or(NotificationStats {
+                    total_batches: 0,
+                    total_delivered: 0,
+                    total_failed: 0,
+                    total_bounced: 0,
+                });
         stats.total_bounced = stats.total_bounced.saturating_add(1);
         env.storage().instance().set(&DataKey::NotifStats, &stats);
-        env.events().publish(
-            (Symbol::new(&env, "notif"), Symbol::new(&env, "bounced")),
-            (batch_id,),
-        );
+        env.events()
+            .publish((Symbol::new(&env, "notif"), Symbol::new(&env, "bounced")), (batch_id,));
     }
 
     /// Clear the consecutive-failure counter for a batch (after remediation).
@@ -395,7 +367,7 @@ impl AuditLedger {
         env.storage().instance().get(&DataKey::NotifBatch(batch_id))
     }
 
-    // ── Private helpers ──────────────────────────────────────────────────────
+    // Private helpers
 
     /// Derive a compound storage key for a subscriber+event_type preference.
     /// Uses a Bytes blob: `sha256(subscriber_strkey || event_type_payload_le)`.

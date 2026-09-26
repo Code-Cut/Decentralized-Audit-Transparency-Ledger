@@ -4,13 +4,11 @@
 //! for purchase or subscription, buyers can discover and purchase access, and
 //! disputes can be raised and resolved by the contract owner.
 
-use soroban_sdk::{
-    contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec,
-};
+use soroban_sdk::{contractimpl, contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec};
 
 use crate::{AuditLedger, AuditLedgerArgs, AuditLedgerClient, ContractError, DataKey};
 
-// ── Access control for a listing ─────────────────────────────────────────────
+// Access control for a listing
 
 /// Who may access a listed event stream.
 #[contracttype]
@@ -26,23 +24,23 @@ pub enum AccessType {
     Private = 3,
 }
 
-// ── Event stream filter ───────────────────────────────────────────────────────
+// Event stream filter
 
 /// Filter criteria that define which events are part of a listing.
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EventFilter {
-    /// Event type to match.  Empty symbol = wildcard (all types).
-    pub event_type: Symbol,
-    /// Category to match.  Empty symbol = wildcard.
-    pub category: Symbol,
+    /// Event type to match.  `None` = wildcard (all types).
+    pub event_type: Option<Symbol>,
+    /// Category to match.  `None` = wildcard.
+    pub category: Option<Symbol>,
     /// Only include events from this submitter address.  `None` = any submitter.
     pub submitter_filter: Option<Address>,
     /// Only include events on or after this timestamp.  0 = no lower bound.
     pub from_timestamp: u64,
 }
 
-// ── Listing ───────────────────────────────────────────────────────────────────
+// Listing
 
 /// A marketplace listing created by a seller.
 #[contracttype]
@@ -73,7 +71,7 @@ pub struct Listing {
     pub platform_fee_bps: u32,
 }
 
-// ── Purchase record ───────────────────────────────────────────────────────────
+// Purchase record
 
 /// Records a buyer's one-time purchase of a listing.
 #[contracttype]
@@ -91,7 +89,7 @@ pub struct Purchase {
     pub valid: bool,
 }
 
-// ── Subscription record ───────────────────────────────────────────────────────
+// Subscription record
 
 /// Records an active or expired subscription.
 #[contracttype]
@@ -109,7 +107,7 @@ pub struct Subscription {
     pub active: bool,
 }
 
-// ── Dispute ───────────────────────────────────────────────────────────────────
+// Dispute
 
 /// Status of a marketplace dispute.
 #[contracttype]
@@ -140,7 +138,7 @@ pub struct Dispute {
     pub resolved_at: u64,
 }
 
-// ── Seller statistics ─────────────────────────────────────────────────────────
+// Seller statistics
 
 /// Aggregate statistics for a seller.
 #[contracttype]
@@ -164,10 +162,11 @@ pub struct BuyerAccess {
     pub expires_at: u64,
 }
 
-// ── AuditLedger implementation ────────────────────────────────────────────────
+// AuditLedger implementation
 
+#[contractimpl]
 impl AuditLedger {
-    // ── Listing management ────────────────────────────────────────────────────
+    // Listing management
 
     /// Create a new marketplace listing.  The seller must authorise.
     pub fn create_listing(
@@ -182,17 +181,9 @@ impl AuditLedger {
     ) -> u32 {
         seller.require_auth();
 
-        let platform_fee_bps: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::MarketplaceFee)
-            .unwrap_or(250); // default 2.5%
+        let platform_fee_bps: u32 = env.storage().instance().get(&DataKey::MarketplaceFee).unwrap_or(250); // default 2.5%
 
-        let listing_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingCount)
-            .unwrap_or(0);
+        let listing_id: u32 = env.storage().instance().get(&DataKey::ListingCount).unwrap_or(0);
 
         let listing = Listing {
             id: listing_id,
@@ -210,9 +201,7 @@ impl AuditLedger {
         env.storage()
             .instance()
             .set(&DataKey::ListingData(listing_id), &listing);
-        env.storage()
-            .instance()
-            .set(&DataKey::ListingCount, &(listing_id + 1));
+        env.storage().instance().set(&DataKey::ListingCount, &(listing_id + 1));
 
         // Update seller stats
         let mut stats: SellerStats = env
@@ -240,12 +229,7 @@ impl AuditLedger {
 
     /// Record a one-time purchase of a listing.  Buyer must authorise.
     /// Note: actual token transfer is handled off-chain or by the calling contract.
-    pub fn purchase_listing(
-        env: Env,
-        buyer: Address,
-        listing_id: u32,
-        amount_stroops: i128,
-    ) -> u32 {
+    pub fn purchase_listing(env: Env, buyer: Address, listing_id: u32, amount_stroops: i128) -> u32 {
         buyer.require_auth();
 
         let listing: Listing = env
@@ -261,11 +245,7 @@ impl AuditLedger {
             panic_with_error!(&env, ContractError::ListingRequiresSubscription);
         }
 
-        let purchase_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::PurchaseCount)
-            .unwrap_or(0);
+        let purchase_id: u32 = env.storage().instance().get(&DataKey::PurchaseCount).unwrap_or(0);
 
         let purchase = Purchase {
             id: purchase_id,
@@ -306,9 +286,7 @@ impl AuditLedger {
                 total_disputes_lost: 0,
             });
         stats.total_sales = stats.total_sales.saturating_add(1);
-        stats.total_revenue_stroops = stats
-            .total_revenue_stroops
-            .saturating_add(amount_stroops);
+        stats.total_revenue_stroops = stats.total_revenue_stroops.saturating_add(amount_stroops);
         env.storage()
             .instance()
             .set(&DataKey::SellerStats(listing.seller), &stats);
@@ -322,20 +300,12 @@ impl AuditLedger {
 
     /// Return all active listings (paginated).
     pub fn browse_listings(env: Env, start: u32, limit: u32) -> Vec<Listing> {
-        let total: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingCount)
-            .unwrap_or(0);
+        let total: u32 = env.storage().instance().get(&DataKey::ListingCount).unwrap_or(0);
         let mut out: Vec<Listing> = Vec::new(&env);
         let mut added: u32 = 0;
         let mut i = start;
         while i < total && added < limit {
-            if let Some(l) = env
-                .storage()
-                .instance()
-                .get::<_, Listing>(&DataKey::ListingData(i))
-            {
+            if let Some(l) = env.storage().instance().get::<_, Listing>(&DataKey::ListingData(i)) {
                 if l.active {
                     out.push_back(l);
                     added += 1;
@@ -346,23 +316,19 @@ impl AuditLedger {
         out
     }
 
-    /// Return listings filtered by event type (paginated).
-    pub fn search_listings(env: Env, event_type: Symbol, start: u32, limit: u32) -> Vec<Listing> {
-        let total: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingCount)
-            .unwrap_or(0);
+    /// Return listings filtered by event type (paginated). `None` matches every type.
+    pub fn search_listings(env: Env, event_type: Option<Symbol>, start: u32, limit: u32) -> Vec<Listing> {
+        let total: u32 = env.storage().instance().get(&DataKey::ListingCount).unwrap_or(0);
         let mut out: Vec<Listing> = Vec::new(&env);
         let mut added: u32 = 0;
         let mut i = start;
         while i < total && added < limit {
-            if let Some(l) = env
-                .storage()
-                .instance()
-                .get::<_, Listing>(&DataKey::ListingData(i))
-            {
-                if l.active && l.filter.event_type == event_type {
+            if let Some(l) = env.storage().instance().get::<_, Listing>(&DataKey::ListingData(i)) {
+                let type_ok = match event_type {
+                    Some(ref want) => l.filter.event_type.as_ref() == Some(want),
+                    None => true,
+                };
+                if l.active && type_ok {
                     out.push_back(l);
                     added += 1;
                 }
@@ -374,11 +340,7 @@ impl AuditLedger {
 
     /// Check whether a buyer has valid access to a listing.
     pub fn has_event_access(env: Env, buyer: Address, listing_id: u32) -> bool {
-        let listing: Listing = match env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingData(listing_id))
-        {
+        let listing: Listing = match env.storage().instance().get(&DataKey::ListingData(listing_id)) {
             Some(l) => l,
             None => return false,
         };
@@ -415,11 +377,7 @@ impl AuditLedger {
         if !Self::has_event_access(env.clone(), buyer, listing_id) {
             return Vec::new(&env);
         }
-        let listing: Listing = match env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingData(listing_id))
-        {
+        let listing: Listing = match env.storage().instance().get(&DataKey::ListingData(listing_id)) {
             Some(l) => l,
             None => return Vec::new(&env),
         };
@@ -429,16 +387,8 @@ impl AuditLedger {
         let mut added: u32 = 0;
         let mut i = start;
         while i < total && added < limit {
-            let id: BytesN<32> = env
-                .storage()
-                .instance()
-                .get(&DataKey::EventOrder(i))
-                .unwrap();
-            let evt: crate::Event = env
-                .storage()
-                .instance()
-                .get(&DataKey::EventData(id))
-                .unwrap();
+            let id: BytesN<32> = env.storage().instance().get(&DataKey::EventOrder(i)).unwrap();
+            let evt: crate::Event = env.storage().instance().get(&DataKey::EventData(id)).unwrap();
             if Self::event_matches_filter(&listing.filter, &evt) {
                 out.push_back(evt);
                 added += 1;
@@ -450,18 +400,10 @@ impl AuditLedger {
 
     /// Return the purchase portfolio of a buyer (all their purchases).
     pub fn get_buyer_portfolio(env: Env, buyer: Address) -> Vec<Purchase> {
-        let total: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::PurchaseCount)
-            .unwrap_or(0);
+        let total: u32 = env.storage().instance().get(&DataKey::PurchaseCount).unwrap_or(0);
         let mut out: Vec<Purchase> = Vec::new(&env);
         for i in 0..total {
-            if let Some(p) = env
-                .storage()
-                .instance()
-                .get::<_, Purchase>(&DataKey::PurchaseData(i))
-            {
+            if let Some(p) = env.storage().instance().get::<_, Purchase>(&DataKey::PurchaseData(i)) {
                 if p.buyer == buyer {
                     out.push_back(p);
                 }
@@ -492,12 +434,7 @@ impl AuditLedger {
     }
 
     /// Subscribe to a listing.  Buyer must authorise.
-    pub fn subscriptions(
-        env: Env,
-        buyer: Address,
-        listing_id: u32,
-        amount_stroops: i128,
-    ) -> u32 {
+    pub fn subscriptions(env: Env, buyer: Address, listing_id: u32, amount_stroops: i128) -> u32 {
         buyer.require_auth();
 
         let listing: Listing = env
@@ -510,11 +447,7 @@ impl AuditLedger {
             panic_with_error!(&env, ContractError::ListingNotFound);
         }
 
-        let sub_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::SubCount)
-            .unwrap_or(0);
+        let sub_id: u32 = env.storage().instance().get(&DataKey::SubCount).unwrap_or(0);
 
         let now = env.ledger().timestamp();
         let expires_at = now + listing.subscription_period_secs;
@@ -528,12 +461,8 @@ impl AuditLedger {
             expires_at,
             active: true,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::SubData(sub_id), &sub);
-        env.storage()
-            .instance()
-            .set(&DataKey::SubCount, &(sub_id + 1));
+        env.storage().instance().set(&DataKey::SubData(sub_id), &sub);
+        env.storage().instance().set(&DataKey::SubCount, &(sub_id + 1));
 
         // Grant time-boxed access
         let access = BuyerAccess {
@@ -560,9 +489,7 @@ impl AuditLedger {
         if fee_bps > 10_000 {
             panic_with_error!(&env, ContractError::InvalidMarketplaceFee);
         }
-        env.storage()
-            .instance()
-            .set(&DataKey::MarketplaceFee, &fee_bps);
+        env.storage().instance().set(&DataKey::MarketplaceFee, &fee_bps);
         env.events().publish(
             (Symbol::new(&env, "market"), Symbol::new(&env, "fee_set")),
             (caller, fee_bps),
@@ -583,7 +510,7 @@ impl AuditLedger {
             })
     }
 
-    // ── Disputes ──────────────────────────────────────────────────────────────
+    // Disputes
 
     /// Open a dispute against a purchase or subscription.
     pub fn open_dispute(
@@ -596,11 +523,7 @@ impl AuditLedger {
     ) -> u32 {
         buyer.require_auth();
 
-        let dispute_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::DisputeCount)
-            .unwrap_or(0);
+        let dispute_id: u32 = env.storage().instance().get(&DataKey::DisputeCount).unwrap_or(0);
 
         let dispute = Dispute {
             id: dispute_id,
@@ -616,15 +539,10 @@ impl AuditLedger {
         env.storage()
             .instance()
             .set(&DataKey::DisputeData(dispute_id), &dispute);
-        env.storage()
-            .instance()
-            .set(&DataKey::DisputeCount, &(dispute_id + 1));
+        env.storage().instance().set(&DataKey::DisputeCount, &(dispute_id + 1));
 
         // Update seller stats
-        let listing: Option<Listing> = env
-            .storage()
-            .instance()
-            .get(&DataKey::ListingData(listing_id));
+        let listing: Option<Listing> = env.storage().instance().get(&DataKey::ListingData(listing_id));
         if let Some(l) = listing {
             let mut stats: SellerStats = env
                 .storage()
@@ -638,9 +556,7 @@ impl AuditLedger {
                     total_disputes_lost: 0,
                 });
             stats.total_disputes = stats.total_disputes.saturating_add(1);
-            env.storage()
-                .instance()
-                .set(&DataKey::SellerStats(l.seller), &stats);
+            env.storage().instance().set(&DataKey::SellerStats(l.seller), &stats);
         }
 
         env.events().publish(
@@ -651,12 +567,7 @@ impl AuditLedger {
     }
 
     /// Resolve a dispute (owner-only).
-    pub fn resolve_dispute(
-        env: Env,
-        caller: Address,
-        dispute_id: u32,
-        for_buyer: bool,
-    ) {
+    pub fn resolve_dispute(env: Env, caller: Address, dispute_id: u32, for_buyer: bool) {
         caller.require_auth();
         Self::require_owner_or_multisig(&env, &caller);
 
@@ -680,10 +591,7 @@ impl AuditLedger {
             env.storage()
                 .instance()
                 .remove(&DataKey::BuyerAccessData(dispute.listing_id, dispute.buyer.clone()));
-            let listing: Option<Listing> = env
-                .storage()
-                .instance()
-                .get(&DataKey::ListingData(dispute.listing_id));
+            let listing: Option<Listing> = env.storage().instance().get(&DataKey::ListingData(dispute.listing_id));
             if let Some(l) = listing {
                 let mut stats: SellerStats = env
                     .storage()
@@ -697,9 +605,7 @@ impl AuditLedger {
                         total_disputes_lost: 0,
                     });
                 stats.total_disputes_lost = stats.total_disputes_lost.saturating_add(1);
-                env.storage()
-                    .instance()
-                    .set(&DataKey::SellerStats(l.seller), &stats);
+                env.storage().instance().set(&DataKey::SellerStats(l.seller), &stats);
             }
         }
 
@@ -709,47 +615,27 @@ impl AuditLedger {
         );
     }
 
-    // ── Private helpers ───────────────────────────────────────────────────────
+    // Private helpers
 
     fn event_matches_filter(filter: &EventFilter, evt: &crate::Event) -> bool {
-        let empty_sym = evt.event_type.clone(); // placeholder comparison
-        // event_type wildcard: if filter.event_type equals empty we treat it as wildcard
-        // Since Symbol has no "is_empty", we compare against filter sentinel
-        let type_matches = filter.event_type == evt.event_type
-            || filter.event_type == Symbol::short(""); // never equal, so rely on type==type
-        // Simplified: always check type equality unless filter is wildcard
-        // Wildcard: filter.event_type byte-equal to evt.event_type OR filter stores a
-        // special wildcard symbol. We use a different approach: if the filter type
-        // string representation equals "" we treat it as wildcard.
-        let filter_type_str = filter.event_type.to_string();
-        let type_ok = if filter_type_str.len() == 0 {
-            true
-        } else {
-            filter.event_type == evt.event_type
-        };
-
-        if !type_ok {
-            return false;
-        }
-
-        // Category filter
-        let filter_cat_str = filter.category.to_string();
-        if filter_cat_str.len() > 0 && filter.category != evt.category {
-            return false;
-        }
-
-        // Submitter filter
-        if let Some(ref expected_sub) = filter.submitter_filter {
-            if expected_sub != &evt.submitter {
+        if let Some(ref want_type) = filter.event_type {
+            if *want_type != evt.event_type {
                 return false;
             }
         }
-
-        // Timestamp lower bound
-        if filter.from_timestamp > 0 && evt.timestamp < filter.from_timestamp {
+        if let Some(ref want_category) = filter.category {
+            if *want_category != evt.category {
+                return false;
+            }
+        }
+        if let Some(ref want_submitter) = filter.submitter_filter {
+            if *want_submitter != evt.submitter {
+                return false;
+            }
+        }
+        if evt.timestamp < filter.from_timestamp {
             return false;
         }
-
         true
     }
 }

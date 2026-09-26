@@ -1,10 +1,8 @@
 use super::*;
-use soroban_sdk::testutils::Address as _;
+use soroban_sdk::testutils::{Address as _, Ledger};
 use soroban_sdk::{symbol_short, Address, Bytes, BytesN, Env, Symbol, Vec};
 
-use crate::cross_contract::{
-    EventRef, WorkflowStep, WorkflowStatus,
-};
+use crate::cross_contract::{EventRef, WorkflowStatus, WorkflowStep};
 
 fn create_ledger() -> (Env, Address, AuditLedgerClient<'static>) {
     let env = Env::default();
@@ -61,18 +59,8 @@ fn multiple_compositions_increment_ids() {
     let mut refs = Vec::new(&env);
     refs.push_back(dummy_event_ref(&env, &contract_b));
 
-    let id1 = client.log_event_with_refs(
-        &composer,
-        &symbol_short!("c1"),
-        &refs,
-        &Bytes::new(&env),
-    );
-    let id2 = client.log_event_with_refs(
-        &composer,
-        &symbol_short!("c2"),
-        &refs,
-        &Bytes::new(&env),
-    );
+    let id1 = client.log_event_with_refs(&composer, &symbol_short!("c1"), &refs, &Bytes::new(&env));
+    let id2 = client.log_event_with_refs(&composer, &symbol_short!("c2"), &refs, &Bytes::new(&env));
 
     assert_eq!(id1, 0);
     assert_eq!(id2, 1);
@@ -230,18 +218,8 @@ fn record_workflow_step_stores_event_ref() {
     let wf_id = client.define_workflow(&owner, &symbol_short!("trade"), &steps);
     let exec_id = client.start_workflow(&initiator, &wf_id, &Bytes::new(&env));
 
-    client.record_workflow_step(
-        &initiator,
-        &exec_id,
-        &0u32,
-        &dummy_event_ref(&env, &contract_b),
-    );
-    client.record_workflow_step(
-        &initiator,
-        &exec_id,
-        &1u32,
-        &dummy_event_ref(&env, &contract_b),
-    );
+    client.record_workflow_step(&initiator, &exec_id, &0u32, &dummy_event_ref(&env, &contract_b));
+    client.record_workflow_step(&initiator, &exec_id, &1u32, &dummy_event_ref(&env, &contract_b));
 
     assert!(client.verify_cross_chain_workflow(&exec_id));
 }
@@ -274,12 +252,7 @@ fn workflow_incomplete_fails_verification() {
     let exec_id = client.start_workflow(&initiator, &wf_id, &Bytes::new(&env));
 
     // Only record step 0
-    client.record_workflow_step(
-        &initiator,
-        &exec_id,
-        &0u32,
-        &dummy_event_ref(&env, &contract_b),
-    );
+    client.record_workflow_step(&initiator, &exec_id, &0u32, &dummy_event_ref(&env, &contract_b));
 
     assert!(!client.verify_cross_chain_workflow(&exec_id));
 }
@@ -312,12 +285,7 @@ fn optional_step_not_required_for_verification() {
     let exec_id = client.start_workflow(&initiator, &wf_id, &Bytes::new(&env));
 
     // Only record the mandatory step
-    client.record_workflow_step(
-        &initiator,
-        &exec_id,
-        &0u32,
-        &dummy_event_ref(&env, &contract_b),
-    );
+    client.record_workflow_step(&initiator, &exec_id, &0u32, &dummy_event_ref(&env, &contract_b));
 
     assert!(client.verify_cross_chain_workflow(&exec_id));
 }
@@ -325,6 +293,7 @@ fn optional_step_not_required_for_verification() {
 #[test]
 fn complete_workflow_changes_status() {
     let (env, owner, client) = create_ledger();
+    env.ledger().set_timestamp(1_700_000_000);
     let initiator = Address::generate(&env);
 
     let mut steps = Vec::new(&env);
@@ -358,12 +327,7 @@ fn get_cross_contract_events_pagination() {
     refs.push_back(dummy_event_ref(&env, &contract_b));
 
     for _ in 0..5u32 {
-        client.log_event_with_refs(
-            &composer,
-            &symbol_short!("ev"),
-            &refs,
-            &Bytes::new(&env),
-        );
+        client.log_event_with_refs(&composer, &symbol_short!("ev"), &refs, &Bytes::new(&env));
     }
 
     let p1 = client.get_cross_contract_events(&0u32, &3u32);

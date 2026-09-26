@@ -4,13 +4,11 @@
 //! multi-step workflow definitions, recording workflow executions, and
 //! verifying cross-chain workflow integrity.
 
-use soroban_sdk::{
-    contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec,
-};
+use soroban_sdk::{contractimpl, contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec};
 
 use crate::{AuditLedger, AuditLedgerArgs, AuditLedgerClient, ContractError, DataKey};
 
-// ── Cross-contract event reference ───────────────────────────────────────────
+// Cross-contract event reference
 
 /// A reference to an event that may live on a different contract instance.
 #[contracttype]
@@ -26,7 +24,7 @@ pub struct EventRef {
     pub event_hash: BytesN<32>,
 }
 
-// ── Cross-contract composed event ────────────────────────────────────────────
+// Cross-contract composed event
 
 /// An event that is composed from multiple events across one or more contracts.
 #[contracttype]
@@ -46,7 +44,7 @@ pub struct CrossContractEvent {
     pub metadata: Bytes,
 }
 
-// ── External event reference (from off-chain / other chains) ─────────────────
+// External event reference (from off-chain / other chains)
 
 /// A reference to an event on an external system (off-chain or another
 /// blockchain), anchored on this ledger for audit purposes.
@@ -69,7 +67,7 @@ pub struct ExternalEvent {
     pub metadata: Bytes,
 }
 
-// ── Workflow definition ───────────────────────────────────────────────────────
+// Workflow definition
 
 /// A step within a workflow definition.
 #[contracttype]
@@ -109,7 +107,7 @@ pub struct WorkflowDefinition {
     pub active: bool,
 }
 
-// ── Workflow execution ────────────────────────────────────────────────────────
+// Workflow execution
 
 /// Current execution status of a workflow instance.
 #[contracttype]
@@ -145,28 +143,19 @@ pub struct WorkflowExecution {
     pub metadata: Bytes,
 }
 
-// ── AuditLedger implementation ────────────────────────────────────────────────
+// AuditLedger implementation
 
+#[contractimpl]
 impl AuditLedger {
-    // ── Cross-contract event composition ─────────────────────────────────────
+    // Cross-contract event composition
 
     /// Log an event that references events from other contract instances.
     /// Records a `CrossContractEvent` composition, then logs the composition
     /// as an ordinary audit event on this ledger.
-    pub fn log_event_with_refs(
-        env: Env,
-        composer: Address,
-        name: Symbol,
-        refs: Vec<EventRef>,
-        metadata: Bytes,
-    ) -> u32 {
+    pub fn log_event_with_refs(env: Env, composer: Address, name: Symbol, refs: Vec<EventRef>, metadata: Bytes) -> u32 {
         composer.require_auth();
 
-        let comp_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::CrossContractCount)
-            .unwrap_or(0);
+        let comp_id: u32 = env.storage().instance().get(&DataKey::CrossContractCount).unwrap_or(0);
 
         let composition = CrossContractEvent {
             id: comp_id,
@@ -215,11 +204,7 @@ impl AuditLedger {
     ) -> u32 {
         submitter.require_auth();
 
-        let ext_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::ExternalEventCount)
-            .unwrap_or(0);
+        let ext_id: u32 = env.storage().instance().get(&DataKey::ExternalEventCount).unwrap_or(0);
 
         let ext = ExternalEvent {
             id: ext_id,
@@ -230,9 +215,7 @@ impl AuditLedger {
             submitter: submitter.clone(),
             metadata,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::ExternalEventData(ext_id), &ext);
+        env.storage().instance().set(&DataKey::ExternalEventData(ext_id), &ext);
         env.storage()
             .instance()
             .set(&DataKey::ExternalEventCount, &(ext_id + 1));
@@ -244,23 +227,14 @@ impl AuditLedger {
         ext_id
     }
 
-    // ── Workflow definitions ──────────────────────────────────────────────────
+    // Workflow definitions
 
     /// Define a new workflow (owner-only).
-    pub fn define_workflow(
-        env: Env,
-        caller: Address,
-        name: Symbol,
-        steps: Vec<WorkflowStep>,
-    ) -> u32 {
+    pub fn define_workflow(env: Env, caller: Address, name: Symbol, steps: Vec<WorkflowStep>) -> u32 {
         caller.require_auth();
         Self::require_owner_or_multisig(&env, &caller);
 
-        let wf_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::WorkflowCount)
-            .unwrap_or(0);
+        let wf_id: u32 = env.storage().instance().get(&DataKey::WorkflowCount).unwrap_or(0);
 
         let wf = WorkflowDefinition {
             id: wf_id,
@@ -271,12 +245,8 @@ impl AuditLedger {
             updated_at: env.ledger().timestamp(),
             active: true,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::WorkflowDef(wf_id), &wf);
-        env.storage()
-            .instance()
-            .set(&DataKey::WorkflowCount, &(wf_id + 1));
+        env.storage().instance().set(&DataKey::WorkflowDef(wf_id), &wf);
+        env.storage().instance().set(&DataKey::WorkflowCount, &(wf_id + 1));
 
         env.events().publish(
             (Symbol::new(&env, "workflow"), Symbol::new(&env, "defined")),
@@ -286,13 +256,7 @@ impl AuditLedger {
     }
 
     /// Record a step in a workflow execution.
-    pub fn record_workflow_step(
-        env: Env,
-        caller: Address,
-        execution_id: u32,
-        step_index: u32,
-        event_ref: EventRef,
-    ) {
+    pub fn record_workflow_step(env: Env, caller: Address, execution_id: u32, step_index: u32, event_ref: EventRef) {
         caller.require_auth();
 
         let exec_key = DataKey::WorkflowExec(execution_id);
@@ -327,11 +291,10 @@ impl AuditLedger {
             Some(e) => e,
             None => return false,
         };
-        let wf: WorkflowDefinition =
-            match env.storage().instance().get(&DataKey::WorkflowDef(exec.definition_id)) {
-                Some(w) => w,
-                None => return false,
-            };
+        let wf: WorkflowDefinition = match env.storage().instance().get(&DataKey::WorkflowDef(exec.definition_id)) {
+            Some(w) => w,
+            None => return false,
+        };
 
         for i in 0..wf.steps.len() {
             let step = wf.steps.get(i).unwrap();
@@ -350,22 +313,20 @@ impl AuditLedger {
 
     /// Return all workflow execution IDs.
     pub fn get_workflow_events(env: Env, execution_id: u32) -> Option<WorkflowExecution> {
-        env.storage()
-            .instance()
-            .get(&DataKey::WorkflowExec(execution_id))
+        env.storage().instance().get(&DataKey::WorkflowExec(execution_id))
     }
 
     /// Return all workflow definitions (paginated by count starting at 0).
     pub fn list_workflows(env: Env, start: u32, limit: u32) -> Vec<WorkflowDefinition> {
-        let total: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::WorkflowCount)
-            .unwrap_or(0);
+        let total: u32 = env.storage().instance().get(&DataKey::WorkflowCount).unwrap_or(0);
         let mut out: Vec<WorkflowDefinition> = Vec::new(&env);
         let end = (start.saturating_add(limit)).min(total);
         for i in start..end {
-            if let Some(wf) = env.storage().instance().get::<_, WorkflowDefinition>(&DataKey::WorkflowDef(i)) {
+            if let Some(wf) = env
+                .storage()
+                .instance()
+                .get::<_, WorkflowDefinition>(&DataKey::WorkflowDef(i))
+            {
                 out.push_back(wf);
             }
         }
@@ -374,11 +335,7 @@ impl AuditLedger {
 
     /// Return cross-contract compositions (paginated).
     pub fn get_cross_contract_events(env: Env, start: u32, limit: u32) -> Vec<CrossContractEvent> {
-        let total: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::CrossContractCount)
-            .unwrap_or(0);
+        let total: u32 = env.storage().instance().get(&DataKey::CrossContractCount).unwrap_or(0);
         let mut out: Vec<CrossContractEvent> = Vec::new(&env);
         let end = (start.saturating_add(limit)).min(total);
         for i in start..end {
@@ -394,12 +351,7 @@ impl AuditLedger {
     }
 
     /// Start a new workflow execution instance.
-    pub fn start_workflow(
-        env: Env,
-        initiator: Address,
-        definition_id: u32,
-        metadata: Bytes,
-    ) -> u32 {
+    pub fn start_workflow(env: Env, initiator: Address, definition_id: u32, metadata: Bytes) -> u32 {
         initiator.require_auth();
 
         let wf: WorkflowDefinition = env
@@ -412,11 +364,7 @@ impl AuditLedger {
             panic_with_error!(&env, ContractError::WorkflowNotActive);
         }
 
-        let exec_id: u32 = env
-            .storage()
-            .instance()
-            .get(&DataKey::WorkflowExecCount)
-            .unwrap_or(0);
+        let exec_id: u32 = env.storage().instance().get(&DataKey::WorkflowExecCount).unwrap_or(0);
 
         let step_count = wf.steps.len();
         let mut step_events: Vec<Option<EventRef>> = Vec::new(&env);
@@ -435,9 +383,7 @@ impl AuditLedger {
             finished_at: 0,
             metadata,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::WorkflowExec(exec_id), &exec);
+        env.storage().instance().set(&DataKey::WorkflowExec(exec_id), &exec);
         env.storage()
             .instance()
             .set(&DataKey::WorkflowExecCount, &(exec_id + 1));

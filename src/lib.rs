@@ -443,7 +443,7 @@ pub enum DataKey {
     /// Optional tag attached to a specific historical version of an event.
     EventVersionTag(u32, u32),
 
-    // ── Notification preferences & digests (issue #409) ──────────────────────
+    // Notification preferences & digests (issue #409)
 
     /// Notification preference keyed by sha256(subscriber || event_type).
     NotifPreference(BytesN<32>),
@@ -456,7 +456,7 @@ pub enum DataKey {
     /// Aggregate notification delivery statistics.
     NotifStats,
 
-    // ── Cross-contract event composition & workflows (issue #410) ────────────
+    // Cross-contract event composition & workflows (issue #410)
 
     /// Total number of cross-contract compositions created.
     CrossContractCount,
@@ -475,7 +475,7 @@ pub enum DataKey {
     /// Individual workflow execution instance.
     WorkflowExec(u32),
 
-    // ── Event marketplace (issue #411) ────────────────────────────────────────
+    // Event marketplace (issue #411)
 
     /// Total number of marketplace listings.
     ListingCount,
@@ -822,12 +822,8 @@ pub enum ContractError {
     /// **Resolution**: Use `DedupPolicy::None | ContentHash | ContentHashWithTimestamp | Custom`.
     InvalidDedupPolicy = 75,
 
-    // ── Issue #409: Notification Preferences & Digests ────────────────────────
-
     /// **Code 76**: The requested notification batch does not exist.
     NotifBatchNotFound = 76,
-
-    // ── Issue #410: Cross-Contract Event Composition & Workflows ─────────────
 
     /// **Code 77**: The referenced workflow execution is not in the `InProgress` state.
     /// **Common cause**: `record_workflow_step` called on a completed or cancelled execution.
@@ -836,8 +832,6 @@ pub enum ContractError {
     /// **Code 78**: The referenced workflow definition is not active (archived).
     /// **Common cause**: `start_workflow` called with an archived definition ID.
     WorkflowNotActive = 78,
-
-    // ── Issue #411: Event Marketplace ────────────────────────────────────────
 
     /// **Code 79**: The requested marketplace listing does not exist or is inactive.
     ListingNotFound = 79,
@@ -6171,20 +6165,16 @@ mod issue365_368_tests;
 #[cfg(test)]
 mod rbac_regression_coverage_tests;
 
-
-// ── Issue #409: Notification Preferences & Digests ───────────────────────────
 pub mod notifications;
 
 #[cfg(test)]
 mod notifications_tests;
 
-// ── Issue #410: Cross-Contract Event Composition & Workflows ─────────────────
 pub mod cross_contract;
 
 #[cfg(test)]
 mod workflow_tests;
 
-// ── Issue #411: Event Marketplace ────────────────────────────────────────────
 pub mod marketplace;
 
 #[cfg(test)]

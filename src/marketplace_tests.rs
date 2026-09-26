@@ -18,8 +18,8 @@ fn create_ledger() -> (Env, Address, AuditLedgerClient<'static>) {
 
 fn default_filter(env: &Env) -> EventFilter {
     EventFilter {
-        event_type: symbol_short!("payment"),
-        category: Symbol::new(env, ""),
+        event_type: Some(symbol_short!("payment")),
+        category: None,
         submitter_filter: None,
         from_timestamp: 0,
     }
@@ -61,8 +61,8 @@ fn search_listings_by_event_type() {
         &0i128,
         &0u64,
         &EventFilter {
-            event_type: symbol_short!("payment"),
-            category: Symbol::new(&env, ""),
+            event_type: Some(symbol_short!("payment")),
+            category: None,
             submitter_filter: None,
             from_timestamp: 0,
         },
@@ -75,16 +75,19 @@ fn search_listings_by_event_type() {
         &0i128,
         &0u64,
         &EventFilter {
-            event_type: symbol_short!("audit"),
-            category: Symbol::new(&env, ""),
+            event_type: Some(symbol_short!("audit")),
+            category: None,
             submitter_filter: None,
             from_timestamp: 0,
         },
     );
 
-    let results = client.search_listings(&symbol_short!("payment"), &0u32, &10u32);
+    let results = client.search_listings(&Some(symbol_short!("payment")), &0u32, &10u32);
     assert_eq!(results.len(), 1);
-    assert_eq!(results.get(0).unwrap().filter.event_type, symbol_short!("payment"));
+    assert_eq!(
+        results.get(0).unwrap().filter.event_type,
+        Some(symbol_short!("payment"))
+    );
 }
 
 // ── Purchase ──────────────────────────────────────────────────────────────────
@@ -219,8 +222,8 @@ fn buyer_portfolio_shows_purchases() {
         &200i128,
         &0u64,
         &EventFilter {
-            event_type: symbol_short!("audit"),
-            category: Symbol::new(&env, ""),
+            event_type: Some(symbol_short!("audit")),
+            category: None,
             submitter_filter: None,
             from_timestamp: 0,
         },
@@ -343,7 +346,7 @@ fn open_and_resolve_dispute_for_buyer() {
     );
 
     client.resolve_dispute(&owner, &dispute_id, &true); // resolved for buyer
-    // Access should be revoked
+                                                        // Access should be revoked
     assert!(!client.has_event_access(&buyer, &listing_id));
 }
 
@@ -374,7 +377,7 @@ fn open_and_resolve_dispute_for_seller() {
     );
 
     client.resolve_dispute(&owner, &dispute_id, &false); // resolved for seller
-    // Access should remain
+                                                         // Access should remain
     assert!(client.has_event_access(&buyer, &listing_id));
 }
 

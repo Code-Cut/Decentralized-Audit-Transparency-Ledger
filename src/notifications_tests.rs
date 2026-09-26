@@ -2,9 +2,7 @@ use super::*;
 use soroban_sdk::testutils::Address as _;
 use soroban_sdk::{symbol_short, Address, Bytes, Env, Symbol, Vec};
 
-use crate::notifications::{
-    ChannelPreference, DeliveryChannel, DigestPreference,
-};
+use crate::notifications::{ChannelPreference, DeliveryChannel, DigestPreference};
 
 fn create_ledger() -> (Env, Address, AuditLedgerClient<'static>) {
     let env = Env::default();
@@ -241,12 +239,20 @@ fn notification_stats_accumulate_across_batches() {
     let sub = Address::generate(&env);
 
     let b1 = client.build_digest(
-        &owner, &sub, &symbol_short!("x"), &DeliveryChannel::Email,
-        &DigestPreference::Instant, &0u64,
+        &owner,
+        &sub,
+        &symbol_short!("x"),
+        &DeliveryChannel::Email,
+        &DigestPreference::Instant,
+        &0u64,
     );
     let b2 = client.build_digest(
-        &owner, &sub, &symbol_short!("y"), &DeliveryChannel::Slack,
-        &DigestPreference::DailyDigest, &0u64,
+        &owner,
+        &sub,
+        &symbol_short!("y"),
+        &DeliveryChannel::Slack,
+        &DigestPreference::DailyDigest,
+        &0u64,
     );
 
     client.record_delivery(&owner, &b1, &true);
@@ -314,9 +320,7 @@ fn preference_update_overwrites_previous() {
     });
     client.set_notification_preference(&sub, &symbol_short!("ev"), &channels2);
 
-    let pref = client
-        .get_notification_preference(&sub, &symbol_short!("ev"))
-        .unwrap();
+    let pref = client.get_notification_preference(&sub, &symbol_short!("ev")).unwrap();
     assert_eq!(pref.channels.len(), 1);
     assert_eq!(pref.channels.get(0).unwrap().channel, DeliveryChannel::Webhook);
 }
