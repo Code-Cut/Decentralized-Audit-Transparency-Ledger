@@ -359,7 +359,7 @@ pub fn log_custody_transfer(
     let mut provenance: Provenance = env
         .storage()
         .persistent()
-        .get(&SupplyChainDataKey::ProvenanceEvent(event_id))
+        .get(&SupplyChainDataKey::ProvenanceEvent(event_id.clone()))
         .unwrap_or_else(|| {
             panic!("Provenance event not found");
         });
@@ -591,7 +591,7 @@ pub fn get_product_timeline(env: &Env, event_ids: Vec<BytesN<32>>) -> Vec<Timeli
         if let Some(prov) = env
             .storage()
             .persistent()
-            .get::<_, Provenance>(&SupplyChainDataKey::ProvenanceEvent(event_id))
+            .get::<_, Provenance>(&SupplyChainDataKey::ProvenanceEvent(event_id.clone()))
         {
             timeline.push_back(TimelineEntry {
                 timestamp: prov.timestamp,

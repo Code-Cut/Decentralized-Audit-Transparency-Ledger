@@ -516,7 +516,7 @@ pub fn record_recycling(
         .unwrap_or(0);
     env.storage()
         .persistent()
-        .set(&PassportDataKey::RecyclingCount(passport_id), &(count + 1));
+        .set(&PassportDataKey::RecyclingCount(passport_id.clone()), &(count + 1));
 
     // Transition to recycled if recovery rate > 80%
     if recovery_rate > 80 {
