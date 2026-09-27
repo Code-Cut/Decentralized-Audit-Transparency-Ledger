@@ -504,6 +504,63 @@ pub enum DataKey {
 
     /// Optional tag attached to a specific historical version of an event.
     EventVersionTag(u32, u32),
+
+    // Notification preferences & digests (issue #409)
+
+    /// Notification preference keyed by sha256(subscriber || event_type).
+    NotifPreference(BytesN<32>),
+    /// Auto-incrementing digest batch counter.
+    NotifBatchCount,
+    /// Individual digest batch record.
+    NotifBatch(u32),
+    /// Consecutive-failure counter per batch ID (for auto-disable after 5 fails).
+    NotifConsecutiveFails(u32),
+    /// Aggregate notification delivery statistics.
+    NotifStats,
+
+    // Cross-contract event composition & workflows (issue #410)
+
+    /// Total number of cross-contract compositions created.
+    CrossContractCount,
+    /// Individual cross-contract composition record.
+    CrossContractEvent(u32),
+    /// Total number of external event anchors registered.
+    ExternalEventCount,
+    /// Individual external event anchor record.
+    ExternalEventData(u32),
+    /// Total number of workflow definitions.
+    WorkflowCount,
+    /// Individual workflow definition.
+    WorkflowDef(u32),
+    /// Total number of workflow execution instances.
+    WorkflowExecCount,
+    /// Individual workflow execution instance.
+    WorkflowExec(u32),
+
+    // Event marketplace (issue #411)
+
+    /// Total number of marketplace listings.
+    ListingCount,
+    /// Individual marketplace listing.
+    ListingData(u32),
+    /// Total number of purchases.
+    PurchaseCount,
+    /// Individual purchase record.
+    PurchaseData(u32),
+    /// Total number of subscriptions.
+    SubCount,
+    /// Individual subscription record.
+    SubData(u32),
+    /// Buyer access record keyed by (listing_id, buyer).
+    BuyerAccessData(u32, Address),
+    /// Platform fee in basis points.
+    MarketplaceFee,
+    /// Per-seller statistics.
+    SellerStats(Address),
+    /// Total number of disputes.
+    DisputeCount,
+    /// Individual dispute record.
+    DisputeData(u32),
 }
 
 #[contracterror]
@@ -826,6 +883,37 @@ pub enum ContractError {
     /// outside the `DedupPolicy` enum.
     /// **Resolution**: Use `DedupPolicy::None | ContentHash | ContentHashWithTimestamp | Custom`.
     InvalidDedupPolicy = 75,
+
+    /// **Code 76**: The requested notification batch does not exist.
+    NotifBatchNotFound = 76,
+
+    /// **Code 77**: The referenced workflow execution is not in the `InProgress` state.
+    /// **Common cause**: `record_workflow_step` called on a completed or cancelled execution.
+    WorkflowNotInProgress = 77,
+
+    /// **Code 78**: The referenced workflow definition is not active (archived).
+    /// **Common cause**: `start_workflow` called with an archived definition ID.
+    WorkflowNotActive = 78,
+
+    /// **Code 79**: The requested marketplace listing does not exist or is inactive.
+    ListingNotFound = 79,
+
+    /// **Code 80**: The listing requires a subscription, not a one-time purchase.
+    /// **Common cause**: `purchase_listing` called on a `Subscription`-type listing.
+    ListingRequiresSubscription = 80,
+
+    /// **Code 81**: The listing requires a one-time purchase, not a subscription.
+    /// **Common cause**: `subscribe` called on a non-subscription listing.
+    ListingRequiresPurchase = 81,
+
+    /// **Code 82**: Platform fee basis points must be 0–10000.
+    InvalidMarketplaceFee = 82,
+
+    /// **Code 83**: The buyer does not have valid access to this listing.
+    NoListingAccess = 83,
+
+    /// **Code 84**: The dispute does not exist.
+    DisputeNotFound = 84,
 }
 
 #[contracttype]
@@ -6881,3 +6969,17 @@ mod issue365_368_tests;
 #[cfg(test)]
 mod rbac_regression_coverage_tests;
 
+pub mod notifications;
+
+#[cfg(test)]
+mod notifications_tests;
+
+pub mod cross_contract;
+
+#[cfg(test)]
+mod workflow_tests;
+
+pub mod marketplace;
+
+#[cfg(test)]
+mod marketplace_tests;

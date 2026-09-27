@@ -40,15 +40,12 @@ rdkafka = { version = "0.39.0", default-features = false, features = [
     "tokio",
 ] }
 
-# pulsar = { version = "6.3.1", default-features = false, features = [
-#     "tokio-runtime",
-#     "compression",
-#     "auth-oauth2",
-# ] }
-
-# schema-registry-client = { version = "0.12.0", default-features = false, features = [
-#     "rustls-tls",
-# ] }
+# Pulsar producer/consumer
+pulsar = { version = "6.3.1", default-features = false, features = [
+    "tokio-runtime",
+    "compression",
+    "auth-oauth2",
+] }
 
 # HTTP client for Soroban RPC mock calls
 reqwest = { version = "0.12.0", default-features = false, features = [
