@@ -516,7 +516,7 @@ pub fn record_recycling(
         .unwrap_or(0);
     env.storage()
         .persistent()
-        .set(&PassportDataKey::RecyclingCount(passport_id), &(count + 1));
+        .set(&PassportDataKey::RecyclingCount(passport_id.clone()), &(count + 1));
 
     // Transition to recycled if recovery rate > 80%
     if recovery_rate > 80 {
@@ -739,15 +739,14 @@ pub fn generate_passport_export(
         .get(&PassportDataKey::Passport(passport_id.clone()))
         .unwrap_or_else(|| panic!("Passport not found"));
 
+    let mut verification_url = Bytes::from_slice(&env, b"https://verify-passport.eu/");
+    verification_url.append(&passport_id);
     let export = PassportExport {
         export_date: env.ledger().timestamp(),
         format,
         data: Bytes::from_slice(&env, b"PASSPORT_DATA"), // Simplified for demo
         digital_signature: Some(env.crypto().sha256(&Bytes::from_slice(&env, b"PASSPORT_DATA"))),
-        verification_url: Bytes::from_slice(
-            &env,
-            format!("https://verify-passport.eu/{}", hex::encode(passport_id.to_vec())).as_bytes(),
-        ),
+        verification_url,
     };
 
     let mut exports: Vec<PassportExport> = env

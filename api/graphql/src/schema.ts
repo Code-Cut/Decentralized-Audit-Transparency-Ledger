@@ -6,7 +6,13 @@ export const typeDefs = `
   & Transparency Ledger. Each event is linked to its predecessor via
   \`prev_hash\`, forming a tamper-evident hash chain.
   """
-  type Event {
+  directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+  directive @extends on OBJECT | INTERFACE
+  directive @external on FIELD_DEFINITION
+  directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+  directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+
+  type Event @key(fields: "id") {
     """Content-addressed identifier (hex-encoded SHA-256)."""
     id: String!
     """Sequential index assigned when the event was logged."""
@@ -23,6 +29,8 @@ export const typeDefs = `
     event_hash: String!
     """Hash of the immediately preceding event, forming the tamper-evident chain."""
     prev_hash: String!
+    """Other events submitted by the same account, optionally filtered by type."""
+    relatedEvents(type: String, limit: Int = 10): [Event!]!
   }
 
   """
@@ -199,6 +207,9 @@ export const typeDefs = `
     \`\`\`
     """
     governanceHistory(types: [String!], limit: Int = 50, offset: Int = 0): [GovernanceEvent!]!
+
+    _service: _Service!
+    _entities(representations: [_Any!]!): [_Entity]!
   }
 
   type Mutation {
@@ -227,39 +238,37 @@ export const typeDefs = `
 
   type Subscription {
     """
-    Subscribe to real-time event notifications. Optionally filter
-    by event type. When no type is provided, all events are pushed.
+    Subscribe to real-time event notifications. All supplied filters must
+    match (AND logic). When no filter is provided, all events are pushed.
+    Authentication is required when using the network server; local in-memory
+    schemas can opt out for tests.
 
-    **Example (subscribe to all events):**
+    **Example (subscribe with advanced filters):**
     \`\`\`graphql
-    subscription {
-      eventLogged {
+    subscription($filter: EventFilter) {
+      eventLogged(filter: $filter) {
         index
         event_type
         submitter
+        metadata
         timestamp
         event_hash
       }
     }
     \`\`\`
 
-    **Example (subscribe to a specific type):**
-    \`\`\`graphql
-    subscription {
-      eventLogged(type: "governance") {
-        index
-        event_type
-        submitter
-        metadata
-      }
-    }
-    \`\`\`
-
     **WebSocket transport:**
     Connect to \`ws://localhost:4000/graphql\` with the \`graphql-ws\`
-    protocol, then send the subscription query over the socket.
+    protocol, then send the subscription query over the socket. Pass the API
+    key as \`connectionParams: { "x-api-key": "<key>" }\`.
     """
-    eventLogged(type: String): Event!
+    eventLogged(
+      filter: EventFilter
+      type: String
+      submitter: String
+      startTime: Int
+      endTime: Int
+    ): Event!
   }
 
   """
@@ -267,6 +276,16 @@ export const typeDefs = `
   such as the \`eventsByType\` map in contract statistics.
   """
   scalar JSON
+
+  scalar _FieldSet
+
+  type _Service {
+    sdl: String
+  }
+
+  union _Entity = Event
+
+  scalar _Any
 `;
 
 export const schema = makeExecutableSchema({ typeDefs });

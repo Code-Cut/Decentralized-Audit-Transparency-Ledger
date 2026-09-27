@@ -233,6 +233,35 @@ fn test_batch_log_events_logs_each_event_atomically() {
 }
 
 #[test]
+fn test_batch_log_events_persists_rate_limit_usage() {
+    let (env, owner, client) = create_ledger();
+    let submitter = Address::generate(&env);
+    let payment = symbol_short!("payment");
+
+    env.ledger().set_timestamp(1000);
+    env.mock_all_auths();
+    client.set_submitter_rate_limit(&owner, &submitter, &2);
+
+    let events = soroban_sdk::vec![
+        &env,
+        (submitter.clone(), payment.clone(), Bytes::from_slice(&env, b"a")),
+        (submitter.clone(), payment.clone(), Bytes::from_slice(&env, b"b")),
+    ];
+    let indices = client.log_events(&events);
+    assert_eq!(indices.len(), 2);
+
+    let result = client.try_log_event(
+        &submitter,
+        &payment,
+        &Bytes::from_slice(&env, b"c"),
+        &None,
+        &None,
+        &false,
+    );
+    assert!(result.is_err());
+}
+
+#[test]
 fn test_batch_log_events_exceeds_type_cap_reverts() {
     let (env, owner, client) = create_ledger();
     let submitter = Address::generate(&env);
@@ -3210,6 +3239,83 @@ fn test_metadata_schema_per_type_isolation() {
         &false,
     );
     assert_eq!(client.total_events(), 2);
+}
+
+#[test]
+fn test_schema_registry_supports_versioned_validation() {
+    let (env, owner, client) = create_ledger();
+    let event_type = symbol_short!("payment");
+    let schema = Schema {
+        format: SchemaFormat::JsonSchemaDraft7,
+        version: 1,
+        definition: Bytes::from_slice(&env, br#"{"type":"object","required":["amount"],"properties":{"amount":{"type":"number"}}}"#),
+        compatibility: SchemaCompatibility::Backward,
+    };
+    env.mock_all_auths();
+    client.register_schema(&owner, &event_type, &schema, &1);
+    let stored = client.get_schema(&event_type, &1);
+    assert!(stored.is_some());
+    assert_eq!(stored.unwrap().version, 1);
+
+    let versions = client.list_schemas(&event_type);
+    assert_eq!(versions.len(), 1);
+    assert_eq!(versions.get(0).unwrap(), 1);
+}
+
+#[test]
+fn test_schema_compatibility_detects_breaking_change() {
+    let (env, owner, client) = create_ledger();
+    let event_type = symbol_short!("payment");
+    let v1 = Schema {
+        format: SchemaFormat::JsonSchemaDraft7,
+        version: 1,
+        definition: Bytes::from_slice(&env, br#"{"type":"object","required":["amount"],"properties":{"amount":{"type":"number"}}}"#),
+        compatibility: SchemaCompatibility::Backward,
+    };
+    let v2 = Schema {
+        format: SchemaFormat::JsonSchemaDraft7,
+        version: 2,
+        definition: Bytes::from_slice(&env, br#"{"type":"object","required":["currency"],"properties":{"currency":{"type":"string"}}}"#),
+        compatibility: SchemaCompatibility::Breaking,
+    };
+    env.mock_all_auths();
+    client.register_schema(&owner, &event_type, &v1, &1);
+    client.register_schema(&owner, &event_type, &v2, &2);
+    let compatibility = client.check_schema_compatibility(&v1, &v2);
+    assert_eq!(compatibility, SchemaCompatibility::Breaking);
+    assert!(client.is_backward_compatible(&v1, &v2) == false);
+    assert!(client.is_forward_compatible(&v1, &v2) == false);
+}
+
+#[test]
+fn test_schema_migration_registers_migration_path() {
+    let (env, owner, client) = create_ledger();
+    let event_type = symbol_short!("payment");
+    let v1 = Schema {
+        format: SchemaFormat::JsonSchemaDraft7,
+        version: 1,
+        definition: Bytes::from_slice(&env, br#"{"type":"object","required":["amount"],"properties":{"amount":{"type":"number"}}}"#),
+        compatibility: SchemaCompatibility::Backward,
+    };
+    let v2 = Schema {
+        format: SchemaFormat::JsonSchemaDraft7,
+        version: 2,
+        definition: Bytes::from_slice(&env, br#"{"type":"object","required":["amount","currency"],"properties":{"amount":{"type":"number"},"currency":{"type":"string"}}}"#),
+        compatibility: SchemaCompatibility::Backward,
+    };
+    let migration = MigrationFunction {
+        from_version: 1,
+        to_version: 2,
+        name: symbol_short!("add_currency"),
+        body: Bytes::from_slice(&env, b"add_currency"),
+    };
+    env.mock_all_auths();
+    client.register_schema(&owner, &event_type, &v1, &1);
+    client.register_schema(&owner, &event_type, &v2, &2);
+    client.migrate_event_metadata(&owner, &event_type, &1, &2, &migration);
+    let stored = client.get_migration_function(&event_type, &1, &2);
+    assert!(stored.is_some());
+    assert_eq!(stored.unwrap().to_version, 2);
 }
 
 // ── TTL auto-cleanup (#200) ───────────────────────────────────────────────────
