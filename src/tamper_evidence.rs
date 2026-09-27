@@ -215,8 +215,8 @@ impl TamperEvidenceHelper {
         let valid = !merkle_path.is_empty();
 
         ArchiveProof {
-            event_hash: *event_hash,
-            archive_root: *archive_root,
+            event_hash: event_hash.clone(),
+            archive_root: archive_root.clone(),
             merkle_path,
             valid,
         }
