@@ -11,6 +11,14 @@ export interface SecurityHeadersOptions {
   crossOriginOpenerPolicy?: string | false;
   crossOriginResourcePolicy?: string | false;
   crossOriginEmbedderPolicy?: string | false;
+  /**
+   * `Cache-Control` value applied to every response. Defaults to a `no-store`
+   * policy so audit payloads are never written to shared caches or the browser
+   * back/forward cache. Pass `false` to leave caching to individual routes.
+   */
+  cacheControl?: string | false;
+  /** Send the legacy `Pragma`/`Expires` pair alongside `cacheControl`. Defaults to true. */
+  legacyNoCacheHeaders?: boolean;
   /** Legacy header, off by default (superseded by CSP) but some clients still honor it. */
   xssProtection?: boolean;
   removePoweredBy?: boolean;
@@ -27,11 +35,17 @@ const DEFAULTS: Required<Omit<SecurityHeadersOptions, "hsts">> & { hsts: Securit
     camera: [],
     payment: [],
     usb: [],
+    accelerometer: [],
+    gyroscope: [],
+    magnetometer: [],
+    "interest-cohort": [],
     fullscreen: ["'self'"],
   },
   crossOriginOpenerPolicy: "same-origin",
   crossOriginResourcePolicy: "same-origin",
   crossOriginEmbedderPolicy: "require-corp",
+  cacheControl: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  legacyNoCacheHeaders: true,
   xssProtection: false,
   removePoweredBy: true,
 };
@@ -53,9 +67,10 @@ function buildPermissionsPolicy(policy: Record<string, string[]>): string {
 
 /**
  * Applies the standard hardening header set (HSTS, X-Frame-Options,
- * X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and the
- * Cross-Origin-* isolation headers) to every response. CSP is handled
- * separately by {@link cspMiddleware} since it needs per-request nonces.
+ * X-Content-Type-Options, Referrer-Policy, Permissions-Policy, the
+ * Cross-Origin-* isolation headers, and a default no-store `Cache-Control`)
+ * to every response. CSP is handled separately by {@link cspMiddleware} since
+ * it needs per-request nonces.
  */
 export function securityHeaders(options: SecurityHeadersOptions = {}) {
   const cfg = { ...DEFAULTS, ...options };
@@ -91,6 +106,14 @@ export function securityHeaders(options: SecurityHeadersOptions = {}) {
     }
     if (cfg.crossOriginEmbedderPolicy) {
       res.setHeader("Cross-Origin-Embedder-Policy", cfg.crossOriginEmbedderPolicy);
+    }
+
+    if (cfg.cacheControl) {
+      res.setHeader("Cache-Control", cfg.cacheControl);
+      if (cfg.legacyNoCacheHeaders) {
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+      }
     }
 
     if (cfg.xssProtection) {
