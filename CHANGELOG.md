@@ -20,3 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Event compliance and regulatory reporting engine for SOX, GDPR, MiCA, automated report generation, and GDPR erasure preservation (#402).
 - Event replay protocol and state reconstruction from ledger history with incremental checkpointing, verification, and CLI tooling (#405).
 - Hardened Content Security Policy with all no-fallback directives (base-uri, form-action, frame-ancestors, media-src, worker-src, manifest-src), Permissions-Policy, strict no-cache headers, and removal of X-Powered-By header across UI and REST endpoints (#729, #730, #731, #732).
+- Contract event time-series optimization with retention tiers and automatic downsampling, lossless compression, and continuous aggregates and materialized views (#430).
