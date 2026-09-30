@@ -15,53 +15,31 @@ const RATE_LIMIT_MAX = parseInt(process.env.RATE_LIMIT_MAX ?? "100", 10);
 const RATE_LIMIT_REFILL_RATE = parseInt(process.env.RATE_LIMIT_REFILL_RATE ?? "100", 10);
 const RATE_LIMIT_REFILL_INTERVAL_MS = parseInt(process.env.RATE_LIMIT_REFILL_INTERVAL_MS ?? "60000", 10);
 
-/**
- * Security headers applied to every response to satisfy the ZAP baseline
- * checks:
- *   - 10055 CSP: Failure to Define Directive with No Fallback
- *   - 10063 Permissions Policy Header Not Set
- *   - 10037 Server Leaks Information via "X-Powered-By"
- *   - 10049 Storable and Cacheable Content
- *
- * The CSP is deliberately explicit about every directive that has no
- * fallback (default-src, base-uri, form-action, frame-ancestors,
- * object-src, script-src, style-src, img-src, font-src, connect-src,
- * media-src, manifest-src, worker-src, frame-src, child-src, upgrade-
- * insecure-requests) so ZAP 10055 does not flag the response.
- */
-export const CSP_POLICY = [
+const CSP_POLICY = [
   "default-src 'self'",
   "base-uri 'self'",
-  "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
-  "font-src 'self'",
   "connect-src 'self'",
-  "media-src 'none'",
+  "font-src 'self'",
+  "form-action 'self'",
+  "frame-src 'none'",
   "manifest-src 'self'",
   "worker-src 'self'",
-  "frame-src 'none'",
-  "child-src 'none'",
   "upgrade-insecure-requests",
 ].join("; ");
 
-/**
- * Permissions-Policy disables powerful browser APIs that this API does not
- * use. ZAP 10063 requires the header to be present on every response.
- */
-export const PERMISSIONS_POLICY = [
+const PERMISSIONS_POLICY = [
   "accelerometer=()",
   "ambient-light-sensor=()",
   "autoplay=()",
-  "battery=()",
   "camera=()",
+  "cross-origin-isolated=()",
   "display-capture=()",
-  "document-domain=()",
   "encrypted-media=()",
-  "eyeds ()",
   "fullscreen=()",
   "geolocation=()",
   "gyroscope=()",
@@ -70,46 +48,13 @@ export const PERMISSIONS_POLICY = [
   "magnetometer=()",
   "microphone=()",
   "midi=()",
-  "otp-credentials=()",
   "payment=()",
   "picture-in-picture=()",
   "publickey-credentials-get=()",
-  "screen-wake-lock=()",
-  "serial=()",
+  "speaker=()",
   "usb=()",
   "xr-spatial-tracking=()",
 ].join(", ");
-
-/**
- * Applies baseline security response headers. This must be mounted as the
- * first middleware in the Express app so that every response - including
- * errors and static assets - carries them.
- */
-export function securityHeadersMiddleware(_req: Request, res: Response, next: NextFunction): void {
-  // Hide the server technology fingerprint (ZAP 10037).
-  res.removeHeader("X-Powered-By");
-  res.setHeader("X-Powered-By", "");
-
-  // CSP with explicit directives (ZAP 10055).
-  res.setHeader("Content-Security-Policy", CSP_POLICY);
-
-  // Permissions Policy (ZAP 10063).
-  res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
-
-  // Prevent storable/cacheable content from being reused across users
-  // (ZAP 10049). Authenticated API responses must not be cached.
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
-  res.setHeader("Pragma", "no-cache");
-  res.setHeader("Expires", "0");
-
-  // Defense-in-depth headers that complement the above.
-  res.setHeader("Referrer-Policy", "no-referrer");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-
-  next();
-}
 
 function getBucket(key: string) {
   let bucket = keyBuckets.get(key);
@@ -125,6 +70,23 @@ function getBucket(key: string) {
     bucket.lastRefill = now;
   }
   return bucket;
+}
+
+export function securityHeadersMiddleware(_req: Request, res: Response, next: NextFunction): void {
+  res.removeHeader("X-Powered-By");
+  res.setHeader("Content-Security-Policy", CSP_POLICY);
+  res.setHeader("Permissions-Policy", PERMISSIONS_POLICY);
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Download-Options", "noopen");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  next();
 }
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction): void {
@@ -156,13 +118,13 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
     ?? `ip:${req.ip}`;
 
   const bucket = getBucket(key);
-  const limit = RATE_LIMIT_MA;
+    const limit = RATE_LIMIT_MA;
   const remaining = bucket.tokens;
   const resetSeconds = Math.ceil(
     (RATE_LIMIT_REFILL_INTERVAL_MS - (Date.now() - bucket.lastRefill)) / 1000
   );
 
-  res.setHeader("X-RateLimit-Limit", String(limit));
+  res.setHeader("X,RateLimit-Limit", String(limit));
   res.setHeader("X-RateLimit-Remaining", String(Math.max(0, remaining)));
   res.setHeader("X-RateLimit-Reset", String(Math.max(0, resetSeconds)));
 
@@ -174,5 +136,24 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
   }
 
   bucket.tokens--;
+  next();
+}
+
+/**
+ * Security headers middleware.
+ *
+ * Addresses OWASP ZAP baseline alerts [90004] for Cross-Origin-Embedder-Policy,
+ * Cross-Origin-Opener-Policy, and Cross-Origin-Resource-Policy by emitting
+ * valid headers on every response, including static assets like /sitemap.xml,
+ * /robots.txt, and the root document.
+ */
+export function securityHeadersMiddleware(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   next();
 }
