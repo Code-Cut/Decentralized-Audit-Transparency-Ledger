@@ -56,6 +56,18 @@ app.use(
   })
 );
 
+// ZAP baseline: ensure Permissions-Policy is always present and CSP has
+// fallbacks for directives that would otherwise inherit from default-src.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Permissions-Policy")) {
+    res.setHeader(
+      "Permissions-Policy",
+      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    );
+  }
+  next();
+});
+
 const cspViolationStore = new ViolationReportStore();
 app.post(
   "/csp-report",
@@ -153,6 +165,7 @@ app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
+  res.setHeader("Surrogate-Control", "no-store");
   if (req.path === "/robots.txt") {
     return res.type("text/plain").send("User-agent: *\nDisallow: /");
   }
