@@ -9,6 +9,38 @@ import {
   type OAuthClient,
 } from "@audit-ledger/security";
 
+/**
+ * Security audit checklist (APIs and services) — see docs/security/api-audit-checklist.md.
+ *
+ * Authentication / authorization
+ *  - [ ] All non-public routes require a valid bearer token (OIDC_JWKS_URI verified).
+ *  - [ ] OAuth clients use PKCE when public; secrets are never committed or logged.
+ *  - [ ] Scopes are least-privilege and enforced per route, not just per token.
+ *  - [ ] Token exchange / client_credentials grants are restricted to trusted services.
+ *
+ * Input handling
+ *  - [ ] Request bodies, query params, and headers are schema-validated.
+ *  - [ ] WAF rules cover OWASP Top 10 (SQLi, XSS, SSRF, path traversal).
+ *  - [ ] Rate limits are configured per client and per route (see createConfiguredRateLimitStore).
+ *
+ * Data protection
+ *  - [ ] Secrets come from env/secret manager; no defaults in production.
+ *  - [ ] PII is minimized, encrypted in transit, and redacted from logs.
+ *  - [ ] Error responses do not leak stack traces or internal identifiers.
+ *
+ * Operations
+ *  - [ ] Dependency scanning (cargo-audit, npm audit, pip-audit, trivy) is green.
+ *  - [ ] SAST (Semgrep, Clippy) and secret scanning (gitleaks) run in CI.
+ *  - [ ] Incident response plan (docs/security/incident-response.md) is current.
+ */
+export const SECURITY_AUDIT_CHECKLIST = {
+  api: "docs/security/api-audit-checklist.md",
+  contracts: "docs/security/smart-contract-audit-checklist.md",
+  infrastructure: "docs/security/infrastructure-audit-checklist.md",
+  incidentResponse: "docs/security/incident-response.md",
+  bugBounty: "docs/security/bug-bounty.md",
+} as const;
+
 export const OAUTH_ISSUER = process.env.OAUTH_ISSUER ?? "http://localhost:3002/oauth";
 
 /**
