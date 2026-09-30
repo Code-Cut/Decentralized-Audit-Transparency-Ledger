@@ -2,7 +2,8 @@
 
 use soroban_sdk::xdr::ToXdr;
 use soroban_sdk::{
-    contracterror, contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol, Vec,
+    bytes, contracterror, contracttype, panic_with_error, symbol_short, Address, Bytes, BytesN,
+    Env, Symbol, Vec,
 };
 
 // ── Error Codes ──────────────────────────────────────────────────────────
@@ -494,8 +495,8 @@ pub fn create_chargeback(
 
     env.events()
         .publish(
-            (Symbol::new(&env, "finops"), Symbol::new(&env, "chargeback")),
-            (caller.clone(), id.clone()),
+            (symbol_short!("finops"), Symbol::new(&env, "chargeback")),
+            (caller, id.clone()),
         );
 
     id
@@ -848,8 +849,8 @@ pub fn create_budget(
 
     env.events()
         .publish(
-            (Symbol::new(&env, "finops"), Symbol::new(&env, "budget_create")),
-            (caller.clone(), id.clone()),
+            (symbol_short!("finops"), Symbol::new(&env, "budget_create")),
+            (caller, id.clone()),
         );
 
     id
@@ -913,7 +914,7 @@ pub fn check_budget(env: Env, caller: Address, budget_id: BytesN<32>, current_sp
     if triggered {
         env.events()
             .publish(
-                (Symbol::new(&env, "finops"), Symbol::new(&env, "budget_alert")),
+                (symbol_short!("finops"), Symbol::new(&env, "budget_alert")),
                 (caller, alert_id.clone()),
             );
     }
