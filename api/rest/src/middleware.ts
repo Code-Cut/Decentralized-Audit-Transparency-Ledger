@@ -66,7 +66,7 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
     (RATE_LIMIT_REFILL_INTERVAL_MS - (Date.now() - bucket.lastRefill)) / 1000
   );
 
-  res.setHeader("X,RateLimit-Limit", String(limit));
+  res.setHeader("X-RateLimit-Limit", String(limit));
   res.setHeader("X-RateLimit-Remaining", String(Math.max(0, remaining)));
   res.setHeader("X-RateLimit-Reset", String(Math.max(0, resetSeconds)));
 
@@ -94,6 +94,14 @@ export function securityHeadersMiddleware(
   res: Response,
   next: NextFunction
 ): void {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb-(), magnetometer=(), gyroscope=(), accelerometer=(), ambient-light-sensor=(), autoplay=(), encrypted-media=(), fullscreen=(), gamepad=(), picture-in-picture=(), publickey-credentials-get=(), speaker-selection=(), sync-xhr-(), unr-optout=(), x-xhr=()");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  res.removeHeader("X-Powered-By");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Resource-Policy", "same-origin");

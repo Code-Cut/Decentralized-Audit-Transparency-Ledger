@@ -3,6 +3,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
+import helmet from "helmet";
 
 import { EVENT_LOGGED, pubsub, resolvers } from "../../graphql/src/resolvers";
 import {
@@ -44,6 +45,48 @@ const port = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.json());
+
+// ── Baseline security headers (ZAP 10055 / 10063 / 10037 / 10049) ───────────
+// - Content-Security-Policy with default-src fallback (fixes 10055)
+// - Permissions-Policy header (fixes 10063)
+// - Removes X-Powered-By (fixes 10037, also covered by app.disable above)
+// - Cache-Control hardening for storable/cacheable content (fixes 10049)
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", "https:", "data:"],
+        formAction: ["'self'"],
+        frameAncestors: ["'self'"],
+        imgSrc: ["'self'", "data:"],
+        objectSrc: ["'none'"],
+        scriptSrc: ["'self'"],
+        scriptSrcAttr: ["'none'"],
+        styleSrc: ["'self'", "https:", "'unsafe-inline'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    crossOriginEmbedderPolicy: true,
+    crossOriginOpenerPolicy: true,
+    crossOriginResourcePolicy: { policy: "same-origin" },
+    referrerPolicy: { policy: "no-referrer" },
+    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+    noSniff: true,
+    frameguard: { action: "deny" },
+    hidePoweredBy: true,
+  })
+);
+
+app.use((_req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+  );
+  next();
+});
 
 // ── Cross-Origin isolation headers (COEP / COOP / CORP) ─────────────────────
 // ZAP baseline flags missing/invalid Cross-Origin-Embedder-Policy,
@@ -110,6 +153,16 @@ app.use(
     },
   })
 );
+
+// ── Cache-Control hardening for all responses (ZAP 10049) ───────────────────
+// Prevents sensitive API responses from being stored by shared caches.
+
+app.use((_req, res, next) => {
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  next();
+});
 
 // ── Per-client quotas with token-bucket burst handling (#444) ────────────────
 // On top of the global limiter above, each client (API key role, explicit
