@@ -21,3 +21,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contract event compaction and garbage collection with retention policies, superseded-version removal, orphan collection, empty segment release, pass scheduling, and Prometheus storage monitoring (#427).
 - Event replay protocol and state reconstruction from ledger history with incremental checkpointing, verification, and CLI tooling (#405).
 - Hardened Content Security Policy with all no-fallback directives (base-uri, form-action, frame-ancestors, media-src, worker-src, manifest-src), Permissions-Policy, strict no-cache headers, and removal of X-Powered-By header across UI and REST endpoints (#729, #730, #731, #732).
+- Tamper-evident contract event audit logging with hash-chained records, JSON/NDJSON/CSV/syslog/CEF/ECS formats, batched SIEM delivery with retries, long-term retention tiers, and SOC2/ISO27001/GDPR/SOX/MiCA compliance reporting (#428).
