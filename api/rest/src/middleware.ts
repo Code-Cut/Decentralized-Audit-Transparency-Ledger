@@ -118,7 +118,7 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
     ?? `ip:${req.ip}`;
 
   const bucket = getBucket(key);
-  const limit = RATE_LIMIT_MA;
+    const limit = RATE_LIMIT_MA;
   const remaining = bucket.tokens;
   const resetSeconds = Math.ceil(
     (RATE_LIMIT_REFILL_INTERVAL_MS - (Date.now() - bucket.lastRefill)) / 1000

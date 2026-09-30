@@ -1,7 +1,7 @@
 # OWASP ZAP Baseline Security Scan Report
 
-**Target**: AuditLedger Smart Contract Authorization & API Surface  
-**Scan Type**: OWASP ZAP Automated Baseline Scan & Architectural Security Review  
+**Target**: AuditLedger HTTP Surface (http://localhost:3000)  
+**Scan Type**: OWASP ZAP Automated Baseline Scan  
 **Date**: September 24, 2026  
 **Status**: REMEDIATED via RBAC Implementation (#686, #689, #688, #687) and API Security Header Hardening
 
@@ -15,6 +15,13 @@ The automated baseline security assessment identified risks in the legacy access
 2. **Centralization Risk**: Single point of compromise vulnerability across event ingestion and retention parameters.
 3. **Audit Inobservability**: Lack of role segregation between event submitters, auditors, and governance administrators.
 4. **Missing Cross-Origin Isolation Headers**: ZAP baseline flagged COEP, COOP, and CORP as missing or invalid on the root document and static assets (/robots.txt, /sitemap.xml).
+
+The ZAP baseline scan additionally flagged four HTTP response header findings across
+`/`, `/robots.txt`, and `/sitemap.xml`:
+1. **CSP: Failure to Define Directive with No Fallback** [10055]
+2. **Permissions Policy Header Not Set** [10063]
+3. **Server Leaks Information via "X-Powered-By"** [10037]
+4. **Storable and Cacheable Content** [10049]
 
 ---
 
