@@ -15,6 +15,7 @@ The automated baseline security assessment identified risks in the legacy access
 2. **Centralization Risk**: Single point of compromise vulnerability across event ingestion and retention parameters.
 3. **Audit Inobservability**: Lack of role segregation between event submitters, auditors, and governance administrators.
 4. **Missing Cross-Origin Isolation Headers**: ZAP baseline flagged COEP, COOP, and CORP as missing or invalid on the root document and static assets (/robots.txt, /sitemap.xml).
+5. **Missing Permissions-Policy, X-Powered-By leakage, and cache control**: ZAP alerts 10063, 10037, and 10049 were open on all crawled routes.
 
 The ZAP baseline scan additionally flagged four HTTP response header findings across
 `/`, `/robots.txt`, and `/sitemap.xml`:
@@ -54,7 +55,7 @@ The ZAP baseline scan additionally flagged four HTTP response header findings ac
 - &bull; **Severity**: LOW
 - &bull; **CWE**: CWE-693: Protection Mechanism Failure
 - &bull; **Status**: **RESOLVED**
-- &bull; **Description**: ZAP reported the `Oross-Origin-Embedder-Policy` header as missing or invalid on `http://localhost:3000/sitemap.xml`.
+- &bull; **Description**: ZAP reported the `Cross-Origin-Embedder-Policy` header as missing or invalid on `http://localhost:3000/sitemap.xml`.
 - &bull; **Remediation**: Added `securityHeadersMiddleware` in `api/rest/src/middleware.ts` that sets `Cross-Origin-Embedder-Policy: require-corp` on all responses.
 
 ### Finding SEC-004: Cross-Origin Opener Policy Header Missing or Invalid [ZAP-90004]
@@ -71,15 +72,36 @@ The ZAP baseline scan additionally flagged four HTTP response header findings ac
 - &bull; **Description**: ZAP reported the `Cross-Origin-Resource-Policy` header as missing or invalid on the root document, `/robots.txt`, and `/sitemap.xml`.
 - &bull; **Remediation**: Added `securityHeadersMiddleware` in `api/rest/src/middleware.ts` that sets `Cross-Origin-Resource-Policy: same-origin` on all responses.
 
-### Finding SEC-006: Non-Storable Content [ZAP-10049]
+### Finding SEC-006: Permissions Policy Header Not Set [ZAP-10063]
+- &bull; **Severity**: LOW
+- &bull; **CWE**: CWE-693: Protection Mechanism Failure
+- &bull; **Status**: **RESOLVED**
+- &bull; **Description**: ZAP reported the `Permissions-Policy` header as missing on all crawled routes.
+- &bull; **Remediation**: Added `Permissions-Policy` to `securityHeadersMiddleware` in `api/rest/src/middleware.ts`, disabling all features by default.
+
+### Finding SEC-007: Server Leaks Information via X-Powered-By [ZAP-10037]
+- &bull; **Severity**: LOW
+- &bull; **CWE**: CWE-200: Exposure of Sensitive Information Through an Incorrect Behavior
+- &bull; **Status**: **RESOLVED**
+- &bull; **Description**: ZAP reported the `X-Powered-By` response header as leaking server technology on all crawled routes.
+- &bull; **Remediation**: `securityHeadersMiddleware` now calls `res.removeHeader("X-Powered-By")` on every response, in addition to `app.disable("x-powered-by")`.
+
+### Finding SEC-008: Storable and Cacheable Content [ZAP-10049]
 - &bull; **Severity**: INFORMATIONAL
 - &bull; **CWE**: N/A
-- &bull; **Status**: **ACKENOWLEDGED**
-- &bull; **Description**: ZAP flagged responses lacking explicit cache control directives. This is an informational alert and is not a vulnerability for the AuditLedger API surface.
-- &bull; **Remediation**: No code change required. The alert is accepted as informational and does not represent an exploitable condition.
+- &bull; **Status**: **RESOLVED**
+- &bull; **Description**: ZAP flagged responses lacking explicit cache control directives.
+- &bull; **Remediation**: `securityHeadersMiddleware` now sets `Cache-Control: no-store, no-cache, must-revalidate, private` along with `Pragma: no-cache` and `Expires: 0` on all responses.
+
+### Finding SEC-009: CSP Failure to Define Directive with No Fallback [ZAP-10055]
+- &bull; **Severity**: MEDIUM
+- &bull; **CWE**: CWE-1021: Creation of a Content Security Policy Not Properly Enforced
+- &bull; **Status**: **RESOLVED**
+- &bull; **Description**: ZAP reported CSP directives without a `default-src` fallback on all crawled routes.
+- &bull; **Remediation**: The DAST bootstrap now mounts the production `cspMiddleware()` from `@audit-ledger/security`, which emits an enforcing CSP with `default-src 'self'`.
 
 ---
 
 ## Verification
 
-After applying the middleware changes, a re-scan of the local target should report zero active alerts for ZAP rule 90004 across `/`, `/robots.txt`, and `/sitemap.xml`. The `securityHeadersMiddleware` must be registered before any route handlers in the Express app so that static asset responses are also covered.
+After applying the middleware changes, a re-scan of the local target should report zero active alerts for ZAP rules 90004, 10055, 10063, 10037, and 10049 across `/`, `/robots.txt`, and `/sitemap.xml`. The `securityHeadersMiddleware` must be registered before any route handlers in the Express app so that static asset responses are also covered.
