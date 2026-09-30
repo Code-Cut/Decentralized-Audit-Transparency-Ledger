@@ -1,7 +1,32 @@
 openapi: 3.1.0
 info:
   title: Audit Ledger REST API
-  description: REST adapter for Decentralized Audit & Transparency Ledger
+  description: |
+    REST adapter for Decentralized Audit & Transparency Ledger.
+
+    ## Authentication
+    Public read endpoints do not require authentication. Write endpoints
+    (e.g. `POST /cache/invalidate`) accept an optional bearer token via the
+    `Authorization` header. When `AUTH_REQUIRED=true` is set on the server,
+    all non-health endpoints require a valid JWT bearer token.
+
+    ## Rate limiting
+    Requests are rate limited per client IP. Limits are advertised via the
+    `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset`
+    response headers. When the limit is exceeded the API returns `429` with
+    a `Retry-After` header and an RFC 9457 problem details body.
+
+    ## Errors
+    All error responses use the `application/problem+json` media type and
+    follow RFC 9457. See the `Errors` tag and the `ErrorResponse` schema for
+    the stable machine-readable error codes.
+
+    ## Versioning & deprecation
+    The current stable version is `v1`, served under `/v1`. Unversioned
+    paths redirect to `/v1`. Breaking changes are introduced only in a new
+    major version path. Deprecated endpoints are annotated with
+    `deprecated: true` and remain available for at least one minor release
+    cycle before removal.
   version: 1.2.0
 servers:
   - url: http://localhost:3002/v1
@@ -93,6 +118,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExportResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /export/events.csv:
     get:
@@ -124,6 +151,8 @@ paths:
             text/csv:
               schema:
                 type: string
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /export/events/stream:
     get:
@@ -151,6 +180,8 @@ paths:
               schema:
                 type: string
                 enum: [running, completed, failed]
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /export/progress:
     get:
@@ -160,6 +191,8 @@ paths:
       responses:
         "200":
           description: Current export status
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /events/stream:
     get:
@@ -183,6 +216,8 @@ paths:
             text/event-stream:
               schema:
                 type: string
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /events:
     get:
@@ -247,6 +282,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /events/{index}:
     get:
@@ -287,6 +324,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /events/type/{type}:
     get:
@@ -318,6 +357,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /cache/stats:
     get:
@@ -339,6 +380,8 @@ paths:
                   totalRequests: 180
                   hitRate: "83.3%"
                   lastReset: "2025-01-01T00:00:00.000Z"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /cache/invalidate:
     post:
@@ -347,6 +390,8 @@ paths:
       description: Resets all cache statistics and forces fresh responses on next requests.
       tags:
         - Cache
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Cache invalidated
@@ -363,6 +408,14 @@ paths:
               example:
                 data:
                   message: "Cache invalidated successfully"
+        "401":
+          description: Authentication required or invalid credentials
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
 
   /health:
     get:
@@ -965,6 +1018,15 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Optional JWT bearer token. Required for write endpoints when the
+        server is configured with `AUTH_REQUIRED=true`.
+
   parameters:
     Limit:
       name: limit
@@ -1104,6 +1166,27 @@ components:
             $ref: "#/components/schemas/ErrorResponse"
 
   schemas:
+    CacheStats:
+      type: object
+      description: Cache statistics snapshot
+      properties:
+        hits:
+          type: integer
+        misses:
+          type: integer
+        totalRequests:
+          type: integer
+        hitRate:
+          type: string
+        lastReset:
+          type: string
+          format: date-time
+      required:
+        - hits
+        - misses
+        - totalRequests
+        - hitRate
+
     HealthStatus:
       type: object
       properties:

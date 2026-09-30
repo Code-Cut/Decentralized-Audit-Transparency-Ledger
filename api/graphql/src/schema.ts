@@ -12,6 +12,10 @@ export const typeDefs = `
   directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
   directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
 
+  """
+  An immutable audit event recorded on-chain. Each event is linked to its predecessor via
+  \`prev_hash\`, forming a tamper-evident hash chain.
+  """
   type Event @key(fields: "id") {
     """Content-addressed identifier (hex-encoded SHA-256)."""
     id: String!
