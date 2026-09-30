@@ -1018,6 +1018,10 @@ pub enum ProposalAction {
     RollbackEvent(u32, u32),
     Pause,
     Unpause,
+    SetRole(Address, Option<Role>),
+    SetSubmitterRateLimit(Address, u32),
+    SetEventTtl(u32),
+    SetGlobalMetadataMaxSize(u32),
 }
 
 #[contracttype]
@@ -6224,6 +6228,16 @@ impl AuditLedger {
         Self::rbac_enabled(&env)
     }
 
+    /// Governance dashboard: aggregate view of all admin-configurable state.
+    /// Returns a single snapshot of roles, caps, schemas, TTL, pause state,
+    /// blocklist/allowlist, rate limits, nonces, and audit counters so a UI
+    /// can render the full governance surface with one read.
+    pub fn get_governance_dashboard(env: Env) -> GovernanceDashboard {
+        Self::require_initialized(&env);
+        Self::require_queries_not_paused(&env);
+        Self::build_governance_dashboard(&env)
+    }
+
     // ═══════════════════════════════════════════════════════════════════════
     // Deduplication policies (issue #366)
     // ═══════════════════════════════════════════════════════════════════════
@@ -6901,6 +6915,11 @@ impl AuditLedger {
     fn strkey_bytes(_env: &Env, addr: &Address) -> Bytes {
         addr.to_string().to_bytes()
     }
+
+    /// Internal builder for `get_governance_dashboard`.
+    fn build_governance_dashboard(env: &Env) -> GovernanceDashboard {
+        GovernanceDashboard::load(env)
+    }
 }
 
 #[cfg(test)]
@@ -6912,6 +6931,9 @@ pub mod cbdc_logging;
 pub mod cbdc_interop;
 pub mod cbdc_offline;
 pub mod cbdc_privacy;
+
+// Governance dashboard types & audit trail (issue #365 governance UI).
+pub mod governance_dashboard;
 
 #[cfg(test)]
 mod cbdc_tests;
@@ -6959,6 +6981,9 @@ mod finops_tests;
 
 #[cfg(test)]
 mod supply_chain_tests;
+
+#[cfg(test)]
+mod governance_dashboard_tests;
 
 #[cfg(test)]
 mod data_retention_tests;
