@@ -3,6 +3,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
+import helmet from "helmet";
 
 import { EVENT_LOGGED, pubsub, resolvers } from "../../graphql/src/resolvers";
 import {
@@ -44,6 +45,31 @@ const port = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.json());
+
+// ── Baseline hardening headers (ZAP 10037 / 10063 / 10049) ───────────────────
+// helmet removes X-Powered-By, sets a Permissions-Policy, and applies sane
+// cache-control defaults. CSP is handled separately below so we disable
+// helmet's CSP to avoid clobbering the nonce/report-only configuration.
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    xPoweredBy: true,
+    referrerPolicy: { policy: "no-referrer" },
+    permissionsPolicy: {
+      features: {
+        accelerometer: [],
+        camera: [],
+        geolocation: [],
+        gyroscope: [],
+        magnetometer: [],
+        microphone: [],
+        payment: [],
+        usb: [],
+      },
+    },
+  })
+);
 
 // ── Security headers + CSP (nonces, report-only mode, violation reporting) ─
 
@@ -148,6 +174,15 @@ function resolveContext(req: express.Request): { apiKey?: string; role?: Role } 
 // ── Health Check Endpoints (#268) ─────────────────────────────────────────────
 
 const startTime = Date.now();
+
+// Ensure every response (including static-ish endpoints below) carries the
+// baseline hardening headers ZAP flags: no X-Powered-By, a Permissions-Policy,
+// and explicit no-store caching for dynamic content.
+app.use((_req, res, next) => {
+  res.removeHeader("X-Powered-By");
+  res.setHeader("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+  next();
+});
 
 app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");

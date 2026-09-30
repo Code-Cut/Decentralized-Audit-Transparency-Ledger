@@ -95,3 +95,74 @@ export function createConfiguredRateLimitStore(): RateLimitStore {
 
   return new MemoryRateLimitStore();
 }
+
+/**
+ * Security headers applied to every response to satisfy ZAP baseline alerts:
+ *  - COPSP: Failure to Define Directive with No Fallback [10055]
+ *  - Permissions Policy Header Not Set [10063]
+ *  - Server Leaks Information via "X-Powered-By" [10037]
+ *  - Storable and Cacheable Content [10049]
+ */
+export const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "frame-src 'none'",
+  "form-action 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  "connect-src 'self'",
+  "manifest-src 'self'",
+  "worker-src 'self' blob:",
+  "child-src 'none'",
+  "media-src 'self'",
+  "upgrade-insecure-requests",
+];
+
+export const PERMISSIONS_POLICY = [
+  "accelerometer=()",
+  "ambient-light-sensor=()",
+  "autoplay=()",
+  "battery=()",
+  "camera=()",
+  "display-capture=()",
+  "document-domain-policy=()",
+  "encrypted-media=()",
+  "fullscreen=(self)",
+  "geolocation=()",
+  "gyroscope=()",
+  "hid=()",
+  "idle-detection=()",
+  "magnetometer=()",
+  "microphone=()",
+  "midi=()",
+  "payment=()",
+  "picture-in-picture=()",
+  "public-key-credentials-get=()",
+  "speaker-selection=()",
+  "usb=()",
+  "xb-delar-sleep=()",
+];
+
+export function applySecurityHeaders(headers: Record<string, string>): Record<string, string> {
+  return {
+    ...headers,
+    "Content-Security-Policy": CONTENT_SECURITY_POLICY.join("; "),
+    "Permissions-Policy": PERMISSIONS_POLICY.join(", "),
+    "Referrer-Policy": "no-referrer",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "X-Download-Options": "noopen",
+    "X-DNS-Prefetch-Control": "off",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Cache-Control": "no-store, no-cache, must-revalidate, private",
+    "Pragma": "no-cache",
+    "Expires": "0",
+    "X-Powered-By": "",
+  };
+}
