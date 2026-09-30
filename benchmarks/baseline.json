@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-30T00:43:49Z",
+  "generated_at": "2026-09-30T01:00:39Z",
   "tool": {
     "name": "audit-ledger-bench",
     "version": "0.1.0",
-    "commit": "d1f6fb80279e51dca570db0f8c81f12fa08eeb70",
+    "commit": "236f09b0efd9935cc858501288612cde7c4e2281",
     "branch": "drips/408",
-    "dirty": true
+    "dirty": false
   },
   "environment": {
     "os": "macos",
@@ -27,7 +27,7 @@
   },
   "host": {
     "peak_rss_bytes": null,
-    "duration_secs": 93.605375414
+    "duration_secs": 98.306231539
   },
   "cases": [
     {
@@ -81,11 +81,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1144974,
-        "median_ns": 1330481,
-        "mean_ns": 1939610,
-        "max_ns": 4611510,
-        "spread": 2.6054757640281974
+        "min_ns": 1080279,
+        "median_ns": 4353310,
+        "mean_ns": 4207101,
+        "max_ns": 8816421,
+        "spread": 1.7770712400449313
       },
       "error": null,
       "expected_failure": false,
@@ -142,11 +142,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 620057,
-        "median_ns": 942969,
-        "mean_ns": 1256213,
-        "max_ns": 2966849,
-        "spread": 2.4887265647120955
+        "min_ns": 1042824,
+        "median_ns": 1395314,
+        "mean_ns": 1330480,
+        "max_ns": 1572883,
+        "spread": 0.37988510113135826
       },
       "error": null,
       "expected_failure": false,
@@ -203,11 +203,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 857971,
-        "median_ns": 1117482,
-        "mean_ns": 1093683,
-        "max_ns": 1276045,
-        "spread": 0.37412146235912525
+        "min_ns": 1079478,
+        "median_ns": 2237486,
+        "mean_ns": 2538510,
+        "max_ns": 5986038,
+        "spread": 2.1928896985277224
       },
       "error": null,
       "expected_failure": false,
@@ -264,11 +264,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 623657,
-        "median_ns": 639801,
-        "mean_ns": 1291258,
-        "max_ns": 5196649,
-        "spread": 7.1475224327564355
+        "min_ns": 638824,
+        "median_ns": 1224003,
+        "mean_ns": 1719971,
+        "max_ns": 4374139,
+        "spread": 3.0517204614694573
       },
       "error": null,
       "expected_failure": false,
@@ -325,11 +325,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 593761,
-        "median_ns": 598336,
-        "mean_ns": 603844,
-        "max_ns": 617159,
-        "spread": 0.0391051181944593
+        "min_ns": 624784,
+        "median_ns": 1132127,
+        "mean_ns": 2625680,
+        "max_ns": 9546533,
+        "spread": 7.8805195883500705
       },
       "error": null,
       "expected_failure": false,
@@ -386,11 +386,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 581055,
-        "median_ns": 588160,
-        "mean_ns": 1189748,
-        "max_ns": 4040302,
-        "spread": 5.881472728509249
+        "min_ns": 581333,
+        "median_ns": 824402,
+        "mean_ns": 958420,
+        "max_ns": 1591315,
+        "spread": 1.2251086241906255
       },
       "error": null,
       "expected_failure": false,
@@ -447,11 +447,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 371012,
-        "median_ns": 376898,
-        "mean_ns": 436505,
-        "max_ns": 787625,
-        "spread": 1.1053733370832426
+        "min_ns": 378788,
+        "median_ns": 428554,
+        "mean_ns": 500751,
+        "max_ns": 784033,
+        "spread": 0.9456101214782735
       },
       "error": null,
       "expected_failure": false,
@@ -508,11 +508,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 606547,
-        "median_ns": 632041,
-        "mean_ns": 820180,
-        "max_ns": 1168781,
-        "spread": 0.8895530511469983
+        "min_ns": 616179,
+        "median_ns": 1248686,
+        "mean_ns": 1331154,
+        "max_ns": 2335955,
+        "spread": 1.3772685847362747
       },
       "error": null,
       "expected_failure": false,
@@ -569,11 +569,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 517265,
-        "median_ns": 890231,
-        "mean_ns": 1050009,
-        "max_ns": 2510420,
-        "spread": 2.23891888734497
+        "min_ns": 520602,
+        "median_ns": 596116,
+        "mean_ns": 862864,
+        "max_ns": 2301256,
+        "spread": 2.9870931161049192
       },
       "error": null,
       "expected_failure": false,
@@ -630,11 +630,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 696130,
-        "median_ns": 747973,
-        "mean_ns": 861145,
-        "max_ns": 1130780,
-        "spread": 0.5811038633747475
+        "min_ns": 669258,
+        "median_ns": 1207689,
+        "mean_ns": 1078501,
+        "max_ns": 1277093,
+        "spread": 0.503304244718632
       },
       "error": null,
       "expected_failure": false,
@@ -691,11 +691,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 641003,
-        "median_ns": 693626,
-        "mean_ns": 850353,
-        "max_ns": 1312034,
-        "spread": 0.9674248081819309
+        "min_ns": 941300,
+        "median_ns": 1215941,
+        "mean_ns": 1723334,
+        "max_ns": 4331014,
+        "spread": 2.7877290098779466
       },
       "error": null,
       "expected_failure": false,
@@ -752,11 +752,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 622237,
-        "median_ns": 1153509,
-        "mean_ns": 1562158,
-        "max_ns": 4898048,
-        "spread": 3.706785989532808
+        "min_ns": 633740,
+        "median_ns": 1340182,
+        "mean_ns": 1743200,
+        "max_ns": 4975291,
+        "spread": 3.2395234378614246
       },
       "error": null,
       "expected_failure": false,
@@ -813,11 +813,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 621323,
-        "median_ns": 631370,
-        "mean_ns": 734446,
-        "max_ns": 1161578,
-        "spread": 0.8556868397294771
+        "min_ns": 619319,
+        "median_ns": 1097430,
+        "mean_ns": 1019964,
+        "max_ns": 1575171,
+        "spread": 0.8709913160748294
       },
       "error": null,
       "expected_failure": false,
@@ -874,11 +874,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 640834,
-        "median_ns": 653910,
-        "mean_ns": 809024,
-        "max_ns": 1206213,
-        "spread": 0.8646128672141427
+        "min_ns": 646437,
+        "median_ns": 1102912,
+        "mean_ns": 1225933,
+        "max_ns": 2743695,
+        "spread": 1.9015642227122382
       },
       "error": null,
       "expected_failure": false,
@@ -935,11 +935,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 595372,
-        "median_ns": 614991,
-        "mean_ns": 2095989,
-        "max_ns": 10403330,
-        "spread": 15.948132574297835
+        "min_ns": 593881,
+        "median_ns": 615833,
+        "mean_ns": 793076,
+        "max_ns": 1394590,
+        "spread": 1.3002047633043374
       },
       "error": null,
       "expected_failure": false,
@@ -996,11 +996,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 634779,
-        "median_ns": 641024,
-        "mean_ns": 682514,
-        "max_ns": 914958,
-        "spread": 0.43708035892571884
+        "min_ns": 823465,
+        "median_ns": 1202035,
+        "mean_ns": 1225610,
+        "max_ns": 2120851,
+        "spread": 1.0793246452890306
       },
       "error": null,
       "expected_failure": false,
@@ -1057,11 +1057,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 620617,
-        "median_ns": 1145572,
-        "mean_ns": 1011078,
-        "max_ns": 1156268,
-        "spread": 0.4675838794942614
+        "min_ns": 1045666,
+        "median_ns": 1200173,
+        "mean_ns": 4070796,
+        "max_ns": 15189022,
+        "spread": 11.784431077852943
       },
       "error": null,
       "expected_failure": false,
@@ -1118,11 +1118,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 638025,
-        "median_ns": 647306,
-        "mean_ns": 709700,
-        "max_ns": 1061802,
-        "spread": 0.6546780039115967
+        "min_ns": 1202532,
+        "median_ns": 3779124,
+        "mean_ns": 3587743,
+        "max_ns": 6982369,
+        "spread": 1.5294118425328198
       },
       "error": null,
       "expected_failure": false,
@@ -1179,11 +1179,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 225785,
-        "median_ns": 370988,
-        "mean_ns": 377972,
-        "max_ns": 510117,
-        "spread": 0.7664183208082203
+        "min_ns": 358040,
+        "median_ns": 384513,
+        "mean_ns": 601021,
+        "max_ns": 1920706,
+        "spread": 4.0640134403778285
       },
       "error": null,
       "expected_failure": false,
@@ -1240,11 +1240,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 259851,
-        "median_ns": 266395,
-        "mean_ns": 271899,
-        "max_ns": 294942,
-        "spread": 0.13172544529739671
+        "min_ns": 461271,
+        "median_ns": 521252,
+        "mean_ns": 935118,
+        "max_ns": 3166639,
+        "spread": 5.190134522265622
       },
       "error": null,
       "expected_failure": false,
@@ -1301,11 +1301,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 498498,
-        "median_ns": 510733,
-        "mean_ns": 662573,
-        "max_ns": 1130111,
-        "spread": 1.2366794391590126
+        "min_ns": 527058,
+        "median_ns": 872208,
+        "mean_ns": 1130870,
+        "max_ns": 2848633,
+        "spread": 2.66172174527177
       },
       "error": null,
       "expected_failure": false,
@@ -1362,11 +1362,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1755577,
-        "median_ns": 1786113,
-        "mean_ns": 2070653,
-        "max_ns": 3344026,
-        "spread": 0.8893328697568407
+        "min_ns": 2021321,
+        "median_ns": 3438849,
+        "mean_ns": 3844597,
+        "max_ns": 6184992,
+        "spread": 1.2107745934758984
       },
       "error": null,
       "expected_failure": false,
@@ -1423,11 +1423,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3909410,
-        "median_ns": 5044458,
-        "mean_ns": 5215135,
-        "max_ns": 7698947,
-        "spread": 0.7512277830442835
+        "min_ns": 4509126,
+        "median_ns": 7665698,
+        "mean_ns": 6768469,
+        "max_ns": 8720436,
+        "spread": 0.5493707161435266
       },
       "error": null,
       "expected_failure": false,
@@ -1484,11 +1484,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 13015847,
-        "median_ns": 16518987,
-        "mean_ns": 16086152,
-        "max_ns": 19969599,
-        "spread": 0.4209551106251249
+        "min_ns": 14279352,
+        "median_ns": 20975907,
+        "mean_ns": 23788131,
+        "max_ns": 39494320,
+        "spread": 1.2020919047743681
       },
       "error": null,
       "expected_failure": false,
@@ -1545,11 +1545,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 15685674,
-        "median_ns": 18261725,
-        "mean_ns": 21123993,
-        "max_ns": 33545406,
-        "spread": 0.9779871288172394
+        "min_ns": 16033751,
+        "median_ns": 23692723,
+        "mean_ns": 26793757,
+        "max_ns": 53748223,
+        "spread": 1.5918166940963265
       },
       "error": null,
       "expected_failure": false,
@@ -1606,11 +1606,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 64234021,
-        "median_ns": 67639053,
-        "mean_ns": 69365772,
-        "max_ns": 77435279,
-        "spread": 0.19517212933185213
+        "min_ns": 59107084,
+        "median_ns": 75822557,
+        "mean_ns": 78730018,
+        "max_ns": 101792218,
+        "spread": 0.5629608877474285
       },
       "error": null,
       "expected_failure": false,
@@ -1667,11 +1667,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4446254,
-        "median_ns": 6097452,
-        "mean_ns": 6877518,
-        "max_ns": 10229702,
-        "spread": 0.9485024236353152
+        "min_ns": 4079420,
+        "median_ns": 5553241,
+        "mean_ns": 5868418,
+        "max_ns": 8245021,
+        "spread": 0.7501206952840692
       },
       "error": null,
       "expected_failure": false,
@@ -1728,11 +1728,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3832288,
-        "median_ns": 6141706,
-        "mean_ns": 6090775,
-        "max_ns": 9559455,
-        "spread": 0.9325042585887374
+        "min_ns": 3971314,
+        "median_ns": 5322730,
+        "mean_ns": 5220770,
+        "max_ns": 6308699,
+        "spread": 0.43913273827528354
       },
       "error": null,
       "expected_failure": false,
@@ -1789,11 +1789,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3946434,
-        "median_ns": 7967005,
-        "mean_ns": 7408224,
-        "max_ns": 11742670,
-        "spread": 0.9785654709643085
+        "min_ns": 4252055,
+        "median_ns": 4928161,
+        "mean_ns": 5399474,
+        "max_ns": 7308014,
+        "spread": 0.6201012913336232
       },
       "error": null,
       "expected_failure": false,
@@ -1850,11 +1850,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5108868,
-        "median_ns": 7035853,
-        "mean_ns": 8520917,
-        "max_ns": 15687539,
-        "spread": 1.5035378084220918
+        "min_ns": 5325712,
+        "median_ns": 9723781,
+        "mean_ns": 9975353,
+        "max_ns": 16110787,
+        "spread": 1.1091441693308395
       },
       "error": null,
       "expected_failure": false,
@@ -1911,11 +1911,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 10585323,
-        "median_ns": 16664134,
-        "mean_ns": 16032304,
-        "max_ns": 23212634,
-        "spread": 0.7577538082687045
+        "min_ns": 10447443,
+        "median_ns": 14950151,
+        "mean_ns": 14519291,
+        "max_ns": 17775437,
+        "spread": 0.49016187194363453
       },
       "error": null,
       "expected_failure": false,
@@ -1972,11 +1972,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5891229,
-        "median_ns": 10542089,
-        "mean_ns": 9557948,
-        "max_ns": 11333738,
-        "spread": 0.5162647554958035
+        "min_ns": 9859795,
+        "median_ns": 10353732,
+        "mean_ns": 11129176,
+        "max_ns": 14011302,
+        "spread": 0.4009672068004078
       },
       "error": null,
       "expected_failure": false,
@@ -2033,11 +2033,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 51344466,
-        "median_ns": 65947691,
-        "mean_ns": 73166860,
-        "max_ns": 124696625,
-        "spread": 1.1122778961283117
+        "min_ns": 50832457,
+        "median_ns": 68466423,
+        "mean_ns": 74239786,
+        "max_ns": 101350846,
+        "spread": 0.7378564088268493
       },
       "error": null,
       "expected_failure": false,
@@ -2094,11 +2094,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2267300,
-        "median_ns": 2360812,
-        "mean_ns": 2786534,
-        "max_ns": 4898926,
-        "spread": 1.1147122261323645
+        "min_ns": 2441329,
+        "median_ns": 3990591,
+        "mean_ns": 9089345,
+        "max_ns": 32831424,
+        "spread": 7.615437162064466
       },
       "error": null,
       "expected_failure": false,
@@ -2155,11 +2155,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2225744,
-        "median_ns": 2463561,
-        "mean_ns": 2962302,
-        "max_ns": 5743828,
-        "spread": 1.4280482602216873
+        "min_ns": 2229192,
+        "median_ns": 3473019,
+        "mean_ns": 3801496,
+        "max_ns": 6724042,
+        "spread": 1.2942198127911193
       },
       "error": null,
       "expected_failure": false,
@@ -2216,11 +2216,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2226377,
-        "median_ns": 2326173,
-        "mean_ns": 2420743,
-        "max_ns": 2644107,
-        "spread": 0.1795782170973526
+        "min_ns": 2226155,
+        "median_ns": 4038499,
+        "mean_ns": 5600770,
+        "max_ns": 15454714,
+        "spread": 3.2756127957441614
       },
       "error": null,
       "expected_failure": false,
@@ -2277,11 +2277,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2297228,
-        "median_ns": 3092727,
-        "mean_ns": 4006027,
-        "max_ns": 7060714,
-        "spread": 1.5402219465216296
+        "min_ns": 2399427,
+        "median_ns": 2968402,
+        "mean_ns": 4404146,
+        "max_ns": 10870670,
+        "spread": 2.853805852441819
       },
       "error": null,
       "expected_failure": false,
@@ -2338,11 +2338,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2304148,
-        "median_ns": 4031404,
-        "mean_ns": 3881471,
-        "max_ns": 5927385,
-        "spread": 0.8987531391048875
+        "min_ns": 2281937,
+        "median_ns": 2409303,
+        "mean_ns": 2832722,
+        "max_ns": 3711592,
+        "spread": 0.593389457448897
       },
       "error": null,
       "expected_failure": false,
@@ -2399,11 +2399,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2281483,
-        "median_ns": 2420237,
-        "mean_ns": 4084188,
-        "max_ns": 8643381,
-        "spread": 2.628626039515965
+        "min_ns": 2319102,
+        "median_ns": 3434182,
+        "mean_ns": 3997062,
+        "max_ns": 7857804,
+        "spread": 1.6128155118162055
       },
       "error": null,
       "expected_failure": false,
@@ -2460,11 +2460,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2288624,
-        "median_ns": 2319899,
-        "mean_ns": 2747295,
-        "max_ns": 5094907,
-        "spread": 1.2096574031886733
+        "min_ns": 2305883,
+        "median_ns": 3061803,
+        "mean_ns": 3117804,
+        "max_ns": 4172786,
+        "spread": 0.6097397513817838
       },
       "error": null,
       "expected_failure": false,
@@ -2521,11 +2521,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2461789,
-        "median_ns": 3125680,
-        "mean_ns": 4251746,
-        "max_ns": 8717106,
-        "spread": 2.001265964526119
+        "min_ns": 2282667,
+        "median_ns": 3342041,
+        "mean_ns": 3902938,
+        "max_ns": 7911998,
+        "spread": 1.6843991441158261
       },
       "error": null,
       "expected_failure": false,
@@ -2582,11 +2582,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3935312,
-        "median_ns": 7017879,
-        "mean_ns": 6479340,
-        "max_ns": 9062016,
-        "spread": 0.7305204321704606
+        "min_ns": 3284123,
+        "median_ns": 4055729,
+        "mean_ns": 6270470,
+        "max_ns": 15740660,
+        "spread": 3.071343524185171
       },
       "error": null,
       "expected_failure": false,
@@ -2643,11 +2643,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2297589,
-        "median_ns": 2420472,
-        "mean_ns": 3215972,
-        "max_ns": 6484319,
-        "spread": 1.7297163528435777
+        "min_ns": 2584289,
+        "median_ns": 3794073,
+        "mean_ns": 4932318,
+        "max_ns": 11999623,
+        "spread": 2.4815901011920434
       },
       "error": null,
       "expected_failure": false,
@@ -2704,11 +2704,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2256075,
-        "median_ns": 2468701,
-        "mean_ns": 2739064,
-        "max_ns": 3960736,
-        "spread": 0.6905093002352249
+        "min_ns": 2261819,
+        "median_ns": 3037292,
+        "mean_ns": 4448313,
+        "max_ns": 13159151,
+        "spread": 3.587844698501165
       },
       "error": null,
       "expected_failure": false,
@@ -2765,11 +2765,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3371999,
-        "median_ns": 4747241,
-        "mean_ns": 5454827,
-        "max_ns": 10071606,
-        "spread": 1.4112633000936754
+        "min_ns": 3207318,
+        "median_ns": 4223670,
+        "mean_ns": 4985146,
+        "max_ns": 10295312,
+        "spread": 1.6781599888248846
       },
       "error": null,
       "expected_failure": false,
@@ -2826,11 +2826,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3441160,
-        "median_ns": 3839820,
-        "mean_ns": 4917149,
-        "max_ns": 10712621,
-        "spread": 1.8936984025292851
+        "min_ns": 3220693,
+        "median_ns": 3366079,
+        "mean_ns": 5517750,
+        "max_ns": 16909264,
+        "spread": 4.066622025210935
       },
       "error": null,
       "expected_failure": false,
@@ -2887,11 +2887,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2307977,
-        "median_ns": 3391898,
-        "mean_ns": 4110749,
-        "max_ns": 6938912,
-        "spread": 1.3652931190737458
+        "min_ns": 2317660,
+        "median_ns": 4797398,
+        "mean_ns": 9007987,
+        "max_ns": 28067097,
+        "spread": 5.367375606526704
       },
       "error": null,
       "expected_failure": false,
@@ -2948,11 +2948,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2673689,
-        "median_ns": 3706598,
-        "mean_ns": 3849018,
-        "max_ns": 6563253,
-        "spread": 1.0493622453797256
+        "min_ns": 2697704,
+        "median_ns": 2772117,
+        "mean_ns": 3119979,
+        "max_ns": 4490663,
+        "spread": 0.6467833067651907
       },
       "error": null,
       "expected_failure": false,
@@ -3009,11 +3009,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3855116,
-        "median_ns": 6215845,
-        "mean_ns": 10653775,
-        "max_ns": 33530732,
-        "spread": 4.774188545563797
+        "min_ns": 3598019,
+        "median_ns": 6263151,
+        "mean_ns": 6242771,
+        "max_ns": 9109489,
+        "spread": 0.87998357376343
       },
       "error": null,
       "expected_failure": false,
@@ -3070,11 +3070,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3840566,
-        "median_ns": 6856966,
-        "mean_ns": 7929809,
-        "max_ns": 12451698,
-        "spread": 1.2558224730879517
+        "min_ns": 3706908,
+        "median_ns": 5148881,
+        "mean_ns": 5354175,
+        "max_ns": 7414535,
+        "spread": 0.7200840337929737
       },
       "error": null,
       "expected_failure": false,
@@ -3131,11 +3131,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2926784,
-        "median_ns": 4309390,
-        "mean_ns": 4623220,
-        "max_ns": 7521073,
-        "spread": 1.066111212955894
+        "min_ns": 2951410,
+        "median_ns": 3421049,
+        "mean_ns": 6139150,
+        "max_ns": 16363805,
+        "spread": 3.920550392584263
       },
       "error": null,
       "expected_failure": false,
@@ -3192,11 +3192,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3055031,
-        "median_ns": 7558945,
-        "mean_ns": 9224002,
-        "max_ns": 28450895,
-        "spread": 3.3597101182770874
+        "min_ns": 2897469,
+        "median_ns": 3780710,
+        "mean_ns": 4025844,
+        "max_ns": 5971008,
+        "spread": 0.812952858061052
       },
       "error": null,
       "expected_failure": false,
@@ -3253,11 +3253,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3012593,
-        "median_ns": 4854668,
-        "mean_ns": 5466537,
-        "max_ns": 7791345,
-        "spread": 0.9843622674094294
+        "min_ns": 3016858,
+        "median_ns": 5784112,
+        "mean_ns": 6227886,
+        "max_ns": 11057161,
+        "spread": 1.390066962742077
       },
       "error": null,
       "expected_failure": false,
@@ -3314,11 +3314,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3554739,
-        "median_ns": 7590794,
-        "mean_ns": 7741971,
-        "max_ns": 14090495,
-        "spread": 1.3879649480673564
+        "min_ns": 2992752,
+        "median_ns": 3456821,
+        "mean_ns": 4019236,
+        "max_ns": 7177068,
+        "spread": 1.2104520309266809
       },
       "error": null,
       "expected_failure": false,
@@ -3375,11 +3375,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 6589853,
-        "median_ns": 12272863,
-        "mean_ns": 12898165,
-        "max_ns": 20428176,
-        "spread": 1.1275545893407268
+        "min_ns": 4254744,
+        "median_ns": 4653516,
+        "mean_ns": 5623274,
+        "max_ns": 8397218,
+        "spread": 0.8901815315559246
       },
       "error": null,
       "expected_failure": false,
@@ -3436,11 +3436,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4603009,
-        "median_ns": 10419115,
-        "mean_ns": 11216792,
-        "max_ns": 20337471,
-        "spread": 1.510153405543561
+        "min_ns": 4214100,
+        "median_ns": 6946184,
+        "mean_ns": 6581709,
+        "max_ns": 7729761,
+        "spread": 0.5061284008600981
       },
       "error": null,
       "expected_failure": false,
@@ -3497,11 +3497,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4133441,
-        "median_ns": 8365923,
-        "mean_ns": 8612107,
-        "max_ns": 14702717,
-        "spread": 1.263372373855222
+        "min_ns": 3730452,
+        "median_ns": 6754051,
+        "mean_ns": 9348005,
+        "max_ns": 17690782,
+        "spread": 2.0669565568871184
       },
       "error": null,
       "expected_failure": false,
@@ -3558,11 +3558,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5345001,
-        "median_ns": 8023628,
-        "mean_ns": 9490715,
-        "max_ns": 18316080,
-        "spread": 1.616610216724903
+        "min_ns": 3804073,
+        "median_ns": 3997107,
+        "mean_ns": 5454968,
+        "max_ns": 10312062,
+        "spread": 1.628174827443949
       },
       "error": null,
       "expected_failure": false,
@@ -3619,11 +3619,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4344072,
-        "median_ns": 6772878,
-        "mean_ns": 9331682,
-        "max_ns": 27175944,
-        "spread": 3.371073862544106
+        "min_ns": 3006895,
+        "median_ns": 5295217,
+        "mean_ns": 7245659,
+        "max_ns": 14060517,
+        "spread": 2.087472902432516
       },
       "error": null,
       "expected_failure": false,
@@ -3680,11 +3680,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3000245,
-        "median_ns": 3535818,
-        "mean_ns": 4148269,
-        "max_ns": 6506216,
-        "spread": 0.9915586718547165
+        "min_ns": 3110806,
+        "median_ns": 5621670,
+        "mean_ns": 5694122,
+        "max_ns": 11912410,
+        "spread": 1.5656564686294285
       },
       "error": null,
       "expected_failure": false,
@@ -3741,11 +3741,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3037110,
-        "median_ns": 3489647,
-        "mean_ns": 3473174,
-        "max_ns": 3995392,
-        "spread": 0.2746071450779979
+        "min_ns": 3008761,
+        "median_ns": 3398353,
+        "mean_ns": 6061524,
+        "max_ns": 17357197,
+        "spread": 4.222173505812963
       },
       "error": null,
       "expected_failure": false,
@@ -3802,11 +3802,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2215870,
-        "median_ns": 2228427,
-        "mean_ns": 3690834,
-        "max_ns": 11188237,
-        "spread": 4.026323052090107
+        "min_ns": 2238578,
+        "median_ns": 2662629,
+        "mean_ns": 4491901,
+        "max_ns": 13549920,
+        "spread": 4.248185533921549
       },
       "error": null,
       "expected_failure": false,
@@ -3863,11 +3863,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2201750,
-        "median_ns": 2399032,
-        "mean_ns": 2818317,
-        "max_ns": 4606173,
-        "spread": 1.0022471563530624
+        "min_ns": 2277153,
+        "median_ns": 3052800,
+        "mean_ns": 3518025,
+        "max_ns": 6880421,
+        "spread": 1.5078839098532495
       },
       "error": null,
       "expected_failure": false,
@@ -3924,11 +3924,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2222416,
-        "median_ns": 2361562,
-        "mean_ns": 2450591,
-        "max_ns": 2884362,
-        "spread": 0.2803000725790811
+        "min_ns": 2355233,
+        "median_ns": 4244465,
+        "mean_ns": 3832457,
+        "max_ns": 5930680,
+        "spread": 0.842378721464307
       },
       "error": null,
       "expected_failure": false,
@@ -3985,11 +3985,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2866977,
-        "median_ns": 2931572,
-        "mean_ns": 3263583,
-        "max_ns": 4424835,
-        "spread": 0.5314070403183002
+        "min_ns": 2974842,
+        "median_ns": 6447637,
+        "mean_ns": 11416968,
+        "max_ns": 48784383,
+        "spread": 7.104857329902412
       },
       "error": null,
       "expected_failure": false,
@@ -4046,11 +4046,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2258078,
-        "median_ns": 2617294,
-        "mean_ns": 2638985,
-        "max_ns": 3472592,
-        "spread": 0.4640342277176351
+        "min_ns": 2384020,
+        "median_ns": 4554773,
+        "mean_ns": 4197944,
+        "max_ns": 5515557,
+        "spread": 0.6875286649850607
       },
       "error": null,
       "expected_failure": false,
@@ -4107,11 +4107,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2227753,
-        "median_ns": 2330286,
-        "mean_ns": 2630084,
-        "max_ns": 3672789,
-        "spread": 0.6201110078333733
+        "min_ns": 2243123,
+        "median_ns": 4672490,
+        "mean_ns": 4363733,
+        "max_ns": 6847446,
+        "spread": 0.9854109907137308
       },
       "error": null,
       "expected_failure": false,
@@ -4168,11 +4168,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 125813,
-        "median_ns": 126827,
-        "mean_ns": 164910,
-        "max_ns": 238763,
-        "spread": 0.8905832354309413
+        "min_ns": 125913,
+        "median_ns": 127815,
+        "mean_ns": 128092,
+        "max_ns": 130791,
+        "spread": 0.038164534679028285
       },
       "error": null,
       "expected_failure": false,
@@ -4229,11 +4229,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 126360,
-        "median_ns": 220665,
-        "mean_ns": 197352,
-        "max_ns": 253224,
-        "spread": 0.5749167289783156
+        "min_ns": 124122,
+        "median_ns": 126398,
+        "mean_ns": 155276,
+        "max_ns": 228523,
+        "spread": 0.8259703476320828
       },
       "error": null,
       "expected_failure": false,
@@ -4290,11 +4290,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 137515,
-        "median_ns": 176179,
-        "mean_ns": 211079,
-        "max_ns": 463266,
-        "spread": 1.8489774604237736
+        "min_ns": 126112,
+        "median_ns": 127577,
+        "mean_ns": 127667,
+        "max_ns": 131787,
+        "spread": 0.04448293971483888
       },
       "error": null,
       "expected_failure": false,
@@ -4351,11 +4351,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 136732,
-        "median_ns": 156699,
-        "mean_ns": 185595,
-        "max_ns": 248301,
-        "spread": 0.71199560941678
+        "min_ns": 133717,
+        "median_ns": 140591,
+        "mean_ns": 190768,
+        "max_ns": 285763,
+        "spread": 1.0814774772211593
       },
       "error": null,
       "expected_failure": false,
@@ -4412,11 +4412,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 128896,
-        "median_ns": 204799,
-        "mean_ns": 193953,
-        "max_ns": 256952,
-        "spread": 0.6252764906078643
+        "min_ns": 121618,
+        "median_ns": 210397,
+        "mean_ns": 191340,
+        "max_ns": 223215,
+        "spread": 0.48288236048993094
       },
       "error": null,
       "expected_failure": false,
@@ -4473,11 +4473,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 139578,
-        "median_ns": 164204,
-        "mean_ns": 434006,
-        "max_ns": 1898761,
-        "spread": 10.71339918637792
+        "min_ns": 136950,
+        "median_ns": 139046,
+        "mean_ns": 139776,
+        "max_ns": 143468,
+        "spread": 0.04687657322037311
       },
       "error": null,
       "expected_failure": false,
@@ -4534,11 +4534,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 225313,
-        "median_ns": 265895,
-        "mean_ns": 293751,
-        "max_ns": 432914,
-        "spread": 0.7807630831719288
+        "min_ns": 127715,
+        "median_ns": 159905,
+        "mean_ns": 179008,
+        "max_ns": 234557,
+        "spread": 0.6681592195365998
       },
       "error": null,
       "expected_failure": false,
@@ -4595,11 +4595,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 148294,
-        "median_ns": 152034,
-        "mean_ns": 227892,
-        "max_ns": 688577,
-        "spread": 3.5536985148058986
+        "min_ns": 149239,
+        "median_ns": 149965,
+        "mean_ns": 334971,
+        "max_ns": 1393301,
+        "spread": 8.295682325876038
       },
       "error": null,
       "expected_failure": false,
@@ -4656,11 +4656,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2289309,
-        "median_ns": 2342937,
-        "mean_ns": 2410255,
-        "max_ns": 2916559,
-        "spread": 0.26771953321834946
+        "min_ns": 2341050,
+        "median_ns": 2991158,
+        "mean_ns": 3888334,
+        "max_ns": 6235713,
+        "spread": 1.3020586007158432
       },
       "error": null,
       "expected_failure": false,
@@ -4717,11 +4717,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2253627,
-        "median_ns": 2388910,
-        "mean_ns": 2894821,
-        "max_ns": 3959293,
-        "spread": 0.7139934112210171
+        "min_ns": 2367666,
+        "median_ns": 4617442,
+        "mean_ns": 4408444,
+        "max_ns": 7289497,
+        "spread": 1.065921564363992
       },
       "error": null,
       "expected_failure": false,
@@ -4778,11 +4778,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 188199,
-        "median_ns": 194085,
-        "mean_ns": 244231,
-        "max_ns": 543125,
-        "spread": 1.828714223149651
+        "min_ns": 190308,
+        "median_ns": 233987,
+        "mean_ns": 271206,
+        "max_ns": 358412,
+        "spread": 0.7184330753417925
       },
       "error": null,
       "expected_failure": false,
@@ -4839,11 +4839,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 181982,
-        "median_ns": 189817,
-        "mean_ns": 201340,
-        "max_ns": 277048,
-        "spread": 0.5008297465453568
+        "min_ns": 181311,
+        "median_ns": 191747,
+        "mean_ns": 251273,
+        "max_ns": 394548,
+        "spread": 1.1120747651853744
       },
       "error": null,
       "expected_failure": false,
@@ -4900,11 +4900,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 164855,
-        "median_ns": 176438,
-        "mean_ns": 202596,
-        "max_ns": 299423,
-        "spread": 0.7626928439451819
+        "min_ns": 164053,
+        "median_ns": 305579,
+        "mean_ns": 289269,
+        "max_ns": 582263,
+        "spread": 1.3685822651425654
       },
       "error": null,
       "expected_failure": false,
@@ -4961,11 +4961,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 217902,
-        "median_ns": 253303,
-        "mean_ns": 290268,
-        "max_ns": 502766,
-        "spread": 1.124597813685586
+        "min_ns": 214574,
+        "median_ns": 400619,
+        "mean_ns": 585664,
+        "max_ns": 2063377,
+        "spread": 4.614865994872934
       },
       "error": null,
       "expected_failure": false,
@@ -5022,11 +5022,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 221307,
-        "median_ns": 225368,
-        "mean_ns": 400828,
-        "max_ns": 1122179,
-        "spread": 3.9973376876930176
+        "min_ns": 233007,
+        "median_ns": 316415,
+        "mean_ns": 332230,
+        "max_ns": 462609,
+        "spread": 0.7256356367428851
       },
       "error": null,
       "expected_failure": false,
@@ -5083,11 +5083,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 120246,
-        "median_ns": 120975,
-        "mean_ns": 121684,
-        "max_ns": 125420,
-        "spread": 0.042769167183302335
+        "min_ns": 119477,
+        "median_ns": 120532,
+        "mean_ns": 125822,
+        "max_ns": 154092,
+        "spread": 0.28718514585338334
       },
       "error": null,
       "expected_failure": false,
@@ -5144,11 +5144,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 120370,
-        "median_ns": 121264,
-        "mean_ns": 122257,
-        "max_ns": 129002,
-        "spread": 0.0711835334476844
+        "min_ns": 120390,
+        "median_ns": 120792,
+        "mean_ns": 121597,
+        "max_ns": 125965,
+        "spread": 0.0461537187893238
       },
       "error": null,
       "expected_failure": false,
@@ -5205,11 +5205,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 271251,
-        "median_ns": 273859,
-        "mean_ns": 285418,
-        "max_ns": 343028,
-        "spread": 0.26209472757879054
+        "min_ns": 283549,
+        "median_ns": 506261,
+        "mean_ns": 655596,
+        "max_ns": 1874874,
+        "spread": 3.143289726050397
       },
       "error": null,
       "expected_failure": false,
@@ -5266,11 +5266,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 255844,
-        "median_ns": 256541,
-        "mean_ns": 267870,
-        "max_ns": 334585,
-        "spread": 0.3069333946620618
+        "min_ns": 254816,
+        "median_ns": 256372,
+        "mean_ns": 297262,
+        "max_ns": 484000,
+        "spread": 0.8939509774858408
       },
       "error": null,
       "expected_failure": false,
@@ -5327,11 +5327,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 274372,
-        "median_ns": 275779,
-        "mean_ns": 279181,
-        "max_ns": 294627,
-        "spread": 0.07344649157477545
+        "min_ns": 273569,
+        "median_ns": 505657,
+        "mean_ns": 1000615,
+        "max_ns": 2601500,
+        "spread": 4.603774890884533
       },
       "error": null,
       "expected_failure": false,
@@ -5388,11 +5388,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 127387,
-        "median_ns": 129509,
-        "mean_ns": 130440,
-        "max_ns": 135778,
-        "spread": 0.06479086395540078
+        "min_ns": 128160,
+        "median_ns": 130015,
+        "mean_ns": 133660,
+        "max_ns": 145019,
+        "spread": 0.12966965350151904
       },
       "error": null,
       "expected_failure": false,
@@ -5449,11 +5449,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 234189,
-        "median_ns": 237791,
-        "mean_ns": 250999,
-        "max_ns": 308628,
-        "spread": 0.31304380737706644
+        "min_ns": 239704,
+        "median_ns": 393558,
+        "mean_ns": 359837,
+        "max_ns": 499720,
+        "spread": 0.6606802555150703
       },
       "error": null,
       "expected_failure": false,
@@ -5510,11 +5510,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 219364,
-        "median_ns": 232161,
-        "mean_ns": 299632,
-        "max_ns": 690758,
-        "spread": 2.030461619307291
+        "min_ns": 217865,
+        "median_ns": 219862,
+        "mean_ns": 240534,
+        "max_ns": 363788,
+        "spread": 0.6637026862304537
       },
       "error": null,
       "expected_failure": false,
@@ -5571,11 +5571,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 215400,
-        "median_ns": 216972,
-        "mean_ns": 271439,
-        "max_ns": 598440,
-        "spread": 1.7653890824622531
+        "min_ns": 212582,
+        "median_ns": 215364,
+        "mean_ns": 320183,
+        "max_ns": 631371,
+        "spread": 1.9445636225181553
       },
       "error": null,
       "expected_failure": false,
@@ -5632,11 +5632,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 228327,
-        "median_ns": 299149,
-        "mean_ns": 302362,
-        "max_ns": 408020,
-        "spread": 0.6006805972943249
+        "min_ns": 225082,
+        "median_ns": 226361,
+        "mean_ns": 230918,
+        "max_ns": 256684,
+        "spread": 0.13960885488224561
       },
       "error": null,
       "expected_failure": false,
@@ -5693,11 +5693,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 239619,
-        "median_ns": 254990,
-        "mean_ns": 261649,
-        "max_ns": 297398,
-        "spread": 0.22659319973332287
+        "min_ns": 234581,
+        "median_ns": 236330,
+        "mean_ns": 332752,
+        "max_ns": 876052,
+        "spread": 2.7143020352896374
       },
       "error": null,
       "expected_failure": false,
@@ -5754,11 +5754,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 252326,
-        "median_ns": 263029,
-        "mean_ns": 359481,
-        "max_ns": 792798,
-        "spread": 2.054800041060111
+        "min_ns": 251119,
+        "median_ns": 354425,
+        "mean_ns": 554011,
+        "max_ns": 1844551,
+        "spread": 4.4958228115962475
       },
       "error": null,
       "expected_failure": false,
@@ -5815,11 +5815,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 250046,
-        "median_ns": 264900,
-        "mean_ns": 265023,
-        "max_ns": 285019,
-        "spread": 0.13202340505851265
+        "min_ns": 247329,
+        "median_ns": 249412,
+        "mean_ns": 257516,
+        "max_ns": 302395,
+        "spread": 0.2207832822799224
       },
       "error": null,
       "expected_failure": false,
@@ -5876,11 +5876,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 248968,
-        "median_ns": 390993,
-        "mean_ns": 510359,
-        "max_ns": 902911,
-        "spread": 1.672518433833854
+        "min_ns": 248326,
+        "median_ns": 254362,
+        "mean_ns": 266677,
+        "max_ns": 346333,
+        "spread": 0.3853051949583664
       },
       "error": null,
       "expected_failure": false,
@@ -5937,11 +5937,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 231906,
-        "median_ns": 286272,
-        "mean_ns": 363282,
-        "max_ns": 633675,
-        "spread": 1.4034519617706238
+        "min_ns": 224485,
+        "median_ns": 228597,
+        "mean_ns": 227837,
+        "max_ns": 230102,
+        "spread": 0.02457162604933573
       },
       "error": null,
       "expected_failure": false,
@@ -5998,11 +5998,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 226916,
-        "median_ns": 237129,
-        "mean_ns": 349742,
-        "max_ns": 835683,
-        "spread": 2.5672397724445344
+        "min_ns": 225886,
+        "median_ns": 228440,
+        "mean_ns": 228176,
+        "max_ns": 230141,
+        "spread": 0.018626335142707055
       },
       "error": null,
       "expected_failure": false,
@@ -6059,11 +6059,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 161256,
-        "median_ns": 204861,
-        "mean_ns": 194582,
-        "max_ns": 228176,
-        "spread": 0.3266605161548562
+        "min_ns": 160462,
+        "median_ns": 163856,
+        "mean_ns": 169011,
+        "max_ns": 199300,
+        "spread": 0.2370251928522605
       },
       "error": null,
       "expected_failure": false,
@@ -6120,11 +6120,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 268643,
-        "median_ns": 462609,
-        "mean_ns": 399783,
-        "max_ns": 500375,
-        "spread": 0.5009241065348923
+        "min_ns": 244937,
+        "median_ns": 246251,
+        "mean_ns": 247229,
+        "max_ns": 252454,
+        "spread": 0.030525764362378225
       },
       "error": null,
       "expected_failure": false,
@@ -6181,11 +6181,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 235577,
-        "median_ns": 242378,
-        "mean_ns": 278643,
-        "max_ns": 393678,
-        "spread": 0.6522910495176955
+        "min_ns": 224259,
+        "median_ns": 228314,
+        "mean_ns": 546556,
+        "max_ns": 2461814,
+        "spread": 9.800340758779576
       },
       "error": null,
       "expected_failure": false,
@@ -6242,11 +6242,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 219668,
-        "median_ns": 258971,
-        "mean_ns": 249182,
-        "max_ns": 271668,
-        "spread": 0.20079468357460875
+        "min_ns": 214621,
+        "median_ns": 216328,
+        "mean_ns": 229256,
+        "max_ns": 277050,
+        "spread": 0.28858492659295143
       },
       "error": null,
       "expected_failure": false,
@@ -6303,11 +6303,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 129767,
-        "median_ns": 138963,
-        "mean_ns": 288095,
-        "max_ns": 897437,
-        "spread": 5.52427624619503
+        "min_ns": 126063,
+        "median_ns": 127330,
+        "mean_ns": 128818,
+        "max_ns": 135270,
+        "spread": 0.07230817560669127
       },
       "error": null,
       "expected_failure": false,
@@ -6364,11 +6364,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 223927,
-        "median_ns": 228968,
-        "mean_ns": 234181,
-        "max_ns": 252786,
-        "spread": 0.126039446560218
+        "min_ns": 222359,
+        "median_ns": 229854,
+        "mean_ns": 301323,
+        "max_ns": 409203,
+        "spread": 0.8128812202528561
       },
       "error": null,
       "expected_failure": false,
@@ -6425,11 +6425,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 125941,
-        "median_ns": 228033,
-        "mean_ns": 233455,
-        "max_ns": 396692,
-        "spread": 1.1873325352032382
+        "min_ns": 123201,
+        "median_ns": 124156,
+        "mean_ns": 124569,
+        "max_ns": 127498,
+        "spread": 0.03460968459035407
       },
       "error": null,
       "expected_failure": false,
@@ -6486,11 +6486,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 250860,
-        "median_ns": 338440,
-        "mean_ns": 636676,
-        "max_ns": 2353728,
-        "spread": 6.213414490013001
+        "min_ns": 246281,
+        "median_ns": 433803,
+        "mean_ns": 360927,
+        "max_ns": 459731,
+        "spread": 0.492043623488081
       },
       "error": null,
       "expected_failure": false,
@@ -6547,11 +6547,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 245111,
-        "median_ns": 377362,
-        "mean_ns": 372044,
-        "max_ns": 511456,
-        "spread": 0.7058076859885203
+        "min_ns": 225974,
+        "median_ns": 228182,
+        "mean_ns": 237483,
+        "max_ns": 284033,
+        "spread": 0.2544416299269881
       },
       "error": null,
       "expected_failure": false,
@@ -6608,11 +6608,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 223210,
-        "median_ns": 239568,
-        "mean_ns": 245389,
-        "max_ns": 281789,
-        "spread": 0.24451930140920322
+        "min_ns": 219498,
+        "median_ns": 225661,
+        "mean_ns": 570920,
+        "max_ns": 2297260,
+        "spread": 9.207448340652572
       },
       "error": null,
       "expected_failure": false,
@@ -6669,11 +6669,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 231214,
-        "median_ns": 300908,
-        "mean_ns": 362567,
-        "max_ns": 728371,
-        "spread": 1.652189373496218
+        "min_ns": 219398,
+        "median_ns": 221252,
+        "mean_ns": 222245,
+        "max_ns": 226576,
+        "spread": 0.03244264458626363
       },
       "error": null,
       "expected_failure": false,
@@ -6730,11 +6730,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 253714,
-        "median_ns": 294702,
-        "mean_ns": 366648,
-        "max_ns": 747916,
-        "spread": 1.6769550257548302
+        "min_ns": 228980,
+        "median_ns": 321796,
+        "mean_ns": 325558,
+        "max_ns": 421913,
+        "spread": 0.5995506469937476
       },
       "error": null,
       "expected_failure": false,
@@ -6791,11 +6791,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 217776,
-        "median_ns": 221932,
-        "mean_ns": 307112,
-        "max_ns": 674467,
-        "spread": 2.0577969828596148
+        "min_ns": 212157,
+        "median_ns": 216410,
+        "mean_ns": 241159,
+        "max_ns": 396728,
+        "spread": 0.852876484450811
       },
       "error": null,
       "expected_failure": false,
@@ -6852,11 +6852,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 224465,
-        "median_ns": 244160,
-        "mean_ns": 319065,
-        "max_ns": 678708,
-        "spread": 1.8604316841415465
+        "min_ns": 219240,
+        "median_ns": 221335,
+        "mean_ns": 229020,
+        "max_ns": 253412,
+        "spread": 0.15439040368671922
       },
       "error": null,
       "expected_failure": false,
@@ -6913,11 +6913,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 221149,
-        "median_ns": 233868,
-        "mean_ns": 236873,
-        "max_ns": 275936,
-        "spread": 0.23426462790976108
+        "min_ns": 222073,
+        "median_ns": 228163,
+        "mean_ns": 237023,
+        "max_ns": 290780,
+        "spread": 0.3011312088287759
       },
       "error": null,
       "expected_failure": false,
@@ -6974,11 +6974,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 221118,
-        "median_ns": 230688,
-        "mean_ns": 245640,
-        "max_ns": 335483,
-        "spread": 0.4957561728395062
+        "min_ns": 218520,
+        "median_ns": 224687,
+        "mean_ns": 249170,
+        "max_ns": 405220,
+        "spread": 0.8309336988788848
       },
       "error": null,
       "expected_failure": false,
@@ -7035,11 +7035,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 221260,
-        "median_ns": 230701,
-        "mean_ns": 238650,
-        "max_ns": 285276,
-        "spread": 0.2774847096458186
+        "min_ns": 221650,
+        "median_ns": 394932,
+        "mean_ns": 325779,
+        "max_ns": 405413,
+        "spread": 0.465302887585711
       },
       "error": null,
       "expected_failure": false,
@@ -7096,11 +7096,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 224901,
-        "median_ns": 249270,
-        "mean_ns": 254619,
-        "max_ns": 309957,
-        "spread": 0.341220363461307
+        "min_ns": 223917,
+        "median_ns": 226024,
+        "mean_ns": 231520,
+        "max_ns": 269031,
+        "spread": 0.19959827274979647
       },
       "error": null,
       "expected_failure": false,
@@ -7157,11 +7157,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 135960,
-        "median_ns": 153972,
-        "mean_ns": 205272,
-        "max_ns": 438808,
-        "spread": 1.966903073286052
+        "min_ns": 132979,
+        "median_ns": 229667,
+        "mean_ns": 203483,
+        "max_ns": 269925,
+        "spread": 0.596280702059939
       },
       "error": null,
       "expected_failure": false,
@@ -7218,11 +7218,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 240431,
-        "median_ns": 241758,
-        "mean_ns": 242560,
-        "max_ns": 245835,
-        "spread": 0.022352931443840533
+        "min_ns": 240208,
+        "median_ns": 245047,
+        "mean_ns": 248115,
+        "max_ns": 271100,
+        "spread": 0.12606561190302268
       },
       "error": null,
       "expected_failure": false,
@@ -7279,11 +7279,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 225765,
-        "median_ns": 321337,
-        "mean_ns": 313585,
-        "max_ns": 438932,
-        "spread": 0.6633752104488434
+        "min_ns": 227337,
+        "median_ns": 231256,
+        "mean_ns": 265611,
+        "max_ns": 383238,
+        "spread": 0.6741489950531013
       },
       "error": null,
       "expected_failure": false,
@@ -7340,11 +7340,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 418552,
-        "median_ns": 450441,
-        "mean_ns": 464217,
-        "max_ns": 547623,
-        "spread": 0.28654363168539276
+        "min_ns": 405097,
+        "median_ns": 407013,
+        "mean_ns": 508778,
+        "max_ns": 743011,
+        "spread": 0.8302290098842052
       },
       "error": null,
       "expected_failure": false,
@@ -7401,11 +7401,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 126910,
-        "median_ns": 141681,
-        "mean_ns": 154191,
-        "max_ns": 216167,
-        "spread": 0.6299856720378879
+        "min_ns": 155290,
+        "median_ns": 232078,
+        "mean_ns": 309394,
+        "max_ns": 743507,
+        "spread": 2.5345659648911143
       },
       "error": null,
       "expected_failure": false,
@@ -7462,11 +7462,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 281118,
-        "median_ns": 290285,
-        "mean_ns": 343109,
-        "max_ns": 547465,
-        "spread": 0.9175362144099763
+        "min_ns": 276151,
+        "median_ns": 278904,
+        "mean_ns": 291806,
+        "max_ns": 367518,
+        "spread": 0.3275930069127729
       },
       "error": null,
       "expected_failure": false,
@@ -7523,11 +7523,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 234730,
-        "median_ns": 236855,
-        "mean_ns": 260726,
-        "max_ns": 393052,
-        "spread": 0.6684342741339638
+        "min_ns": 228825,
+        "median_ns": 413879,
+        "mean_ns": 354091,
+        "max_ns": 449634,
+        "spread": 0.5335110020078332
       },
       "error": null,
       "expected_failure": false,
@@ -7584,11 +7584,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 157031,
-        "median_ns": 158923,
-        "mean_ns": 164459,
-        "max_ns": 186707,
-        "spread": 0.1867319393668632
+        "min_ns": 154285,
+        "median_ns": 155800,
+        "mean_ns": 156049,
+        "max_ns": 158576,
+        "spread": 0.027541720154043645
       },
       "error": null,
       "expected_failure": false,
@@ -7645,11 +7645,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 158375,
-        "median_ns": 166056,
-        "mean_ns": 170085,
-        "max_ns": 188016,
-        "spread": 0.17850002408825938
+        "min_ns": 154952,
+        "median_ns": 161197,
+        "mean_ns": 168879,
+        "max_ns": 227596,
+        "spread": 0.4506535481429555
       },
       "error": null,
       "expected_failure": false,
@@ -7706,11 +7706,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1334442,
-        "median_ns": 1415271,
-        "mean_ns": 1783718,
-        "max_ns": 3921795,
-        "spread": 1.8281678915204227
+        "min_ns": 1360360,
+        "median_ns": 2611875,
+        "mean_ns": 9653375,
+        "max_ns": 43319891,
+        "spread": 16.06490777698014
       },
       "error": null,
       "expected_failure": false,
@@ -7767,11 +7767,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 820263,
-        "median_ns": 826418,
-        "mean_ns": 908336,
-        "max_ns": 1391269,
-        "spread": 0.6909409039977348
+        "min_ns": 866318,
+        "median_ns": 1357588,
+        "mean_ns": 1881039,
+        "max_ns": 4620569,
+        "spread": 2.7653831648482456
       },
       "error": null,
       "expected_failure": false,
@@ -7828,11 +7828,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5807326,
-        "median_ns": 7056075,
-        "mean_ns": 7682818,
-        "max_ns": 13564808,
-        "spread": 1.0994046973707055
+        "min_ns": 6170019,
+        "median_ns": 14910137,
+        "mean_ns": 14033736,
+        "max_ns": 25501652,
+        "spread": 1.2965429492700167
       },
       "error": null,
       "expected_failure": false,
@@ -7889,11 +7889,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 246975,
-        "median_ns": 486387,
-        "mean_ns": 1073523,
-        "max_ns": 3580564,
-        "spread": 6.853778986691667
+        "min_ns": 243980,
+        "median_ns": 244348,
+        "mean_ns": 246976,
+        "max_ns": 253171,
+        "spread": 0.03761438603958289
       },
       "error": null,
       "expected_failure": false,
@@ -7950,11 +7950,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 314675,
-        "median_ns": 760177,
-        "mean_ns": 984950,
-        "max_ns": 3294567,
-        "spread": 3.9199975795110875
+        "min_ns": 189233,
+        "median_ns": 189933,
+        "mean_ns": 193487,
+        "max_ns": 208088,
+        "spread": 0.0992718484939426
       },
       "error": null,
       "expected_failure": false,
@@ -8011,11 +8011,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 278169,
-        "median_ns": 552450,
-        "mean_ns": 1190043,
-        "max_ns": 4002945,
-        "spread": 6.742286179744773
+        "min_ns": 273121,
+        "median_ns": 275406,
+        "mean_ns": 281958,
+        "max_ns": 319471,
+        "spread": 0.1682969869937474
       },
       "error": null,
       "expected_failure": false,
@@ -8072,11 +8072,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 391936,
-        "median_ns": 453863,
-        "mean_ns": 612704,
-        "max_ns": 1253591,
-        "spread": 1.8984913949804236
+        "min_ns": 235236,
+        "median_ns": 239689,
+        "mean_ns": 245553,
+        "max_ns": 277757,
+        "spread": 0.1774007150933084
       },
       "error": null,
       "expected_failure": false,
@@ -8133,11 +8133,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 130945,
-        "median_ns": 207978,
-        "mean_ns": 208185,
-        "max_ns": 282970,
-        "spread": 0.7309667368663993
+        "min_ns": 125147,
+        "median_ns": 125715,
+        "mean_ns": 125910,
+        "max_ns": 127012,
+        "spread": 0.014835142982142146
       },
       "error": null,
       "expected_failure": false,
@@ -8194,11 +8194,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 228128,
-        "median_ns": 416886,
-        "mean_ns": 577238,
-        "max_ns": 1923707,
-        "spread": 4.067248600336783
+        "min_ns": 233067,
+        "median_ns": 408827,
+        "mean_ns": 341514,
+        "max_ns": 433521,
+        "spread": 0.4903149743045347
       },
       "error": null,
       "expected_failure": false,
@@ -8255,11 +8255,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 247074,
-        "median_ns": 285850,
-        "mean_ns": 639879,
-        "max_ns": 1656522,
-        "spread": 4.9307259051950325
+        "min_ns": 247754,
+        "median_ns": 248753,
+        "mean_ns": 249958,
+        "max_ns": 256035,
+        "spread": 0.03329005077325701
       },
       "error": null,
       "expected_failure": false,
@@ -8316,11 +8316,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 599914,
-        "median_ns": 704449,
-        "mean_ns": 749754,
-        "max_ns": 1298508,
-        "spread": 0.9916885395536086
+        "min_ns": 595278,
+        "median_ns": 597069,
+        "mean_ns": 633690,
+        "max_ns": 828058,
+        "spread": 0.38987118741719967
       },
       "error": null,
       "expected_failure": false,
@@ -8377,11 +8377,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 637010,
-        "median_ns": 648078,
-        "mean_ns": 810479,
-        "max_ns": 1728565,
-        "spread": 1.6842957174907958
+        "min_ns": 635273,
+        "median_ns": 665932,
+        "mean_ns": 1049909,
+        "max_ns": 3329837,
+        "spread": 4.046305028141012
       },
       "error": null,
       "expected_failure": false,
@@ -8438,11 +8438,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 622521,
-        "median_ns": 754843,
-        "mean_ns": 852518,
-        "max_ns": 1180317,
-        "spread": 0.7389563127696753
+        "min_ns": 611861,
+        "median_ns": 622617,
+        "mean_ns": 636073,
+        "max_ns": 691857,
+        "spread": 0.12848348181948133
       },
       "error": null,
       "expected_failure": false,
@@ -8499,11 +8499,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 244097,
-        "median_ns": 247141,
-        "mean_ns": 275318,
-        "max_ns": 448280,
-        "spread": 0.826180196729802
+        "min_ns": 242809,
+        "median_ns": 248500,
+        "mean_ns": 287210,
+        "max_ns": 455759,
+        "spread": 0.8569416498993964
       },
       "error": null,
       "expected_failure": false,
@@ -8560,11 +8560,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 613232,
-        "median_ns": 614368,
-        "mean_ns": 616748,
-        "max_ns": 626455,
-        "spread": 0.02152293088181676
+        "min_ns": 613831,
+        "median_ns": 620413,
+        "mean_ns": 662673,
+        "max_ns": 827374,
+        "spread": 0.34419491532253516
       },
       "error": null,
       "expected_failure": false,
@@ -8621,11 +8621,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2815987,
-        "median_ns": 3412519,
-        "mean_ns": 3318445,
-        "max_ns": 3736925,
-        "spread": 0.2698704388166044
+        "min_ns": 2782854,
+        "median_ns": 3886423,
+        "mean_ns": 3659843,
+        "max_ns": 4752212,
+        "spread": 0.50672765162207
       },
       "error": null,
       "expected_failure": false,
@@ -8682,11 +8682,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1812916,
-        "median_ns": 3092622,
-        "mean_ns": 3460815,
-        "max_ns": 6292705,
-        "spread": 1.4485407527981111
+        "min_ns": 1859204,
+        "median_ns": 2079567,
+        "mean_ns": 2180875,
+        "max_ns": 3074343,
+        "spread": 0.5843230826417231
       },
       "error": null,
       "expected_failure": false,
@@ -8743,11 +8743,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2532062,
-        "median_ns": 2631034,
-        "mean_ns": 3017879,
-        "max_ns": 4124718,
-        "spread": 0.6053346326957386
+        "min_ns": 2565584,
+        "median_ns": 3420466,
+        "mean_ns": 3568352,
+        "max_ns": 4920698,
+        "spread": 0.6885360064973604
       },
       "error": null,
       "expected_failure": false,
@@ -8804,11 +8804,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1240785,
-        "median_ns": 1418481,
-        "mean_ns": 1539606,
-        "max_ns": 2311867,
-        "spread": 0.7550908330813032
+        "min_ns": 1296807,
+        "median_ns": 1454228,
+        "mean_ns": 3492938,
+        "max_ns": 9569662,
+        "spread": 5.688829399516444
       },
       "error": null,
       "expected_failure": false,
@@ -8865,11 +8865,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3037687,
-        "median_ns": 3903955,
-        "mean_ns": 3603717,
-        "max_ns": 4045926,
-        "spread": 0.2582609174542227
+        "min_ns": 3080822,
+        "median_ns": 7640287,
+        "mean_ns": 6995919,
+        "max_ns": 11473186,
+        "spread": 1.0984357001248775
       },
       "error": null,
       "expected_failure": false,
@@ -8926,11 +8926,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 131303,
-        "median_ns": 133584,
-        "mean_ns": 180200,
-        "max_ns": 315231,
-        "spread": 1.3768714816145646
+        "min_ns": 237397,
+        "median_ns": 269337,
+        "mean_ns": 478855,
+        "max_ns": 1531930,
+        "spread": 4.806368972699629
       },
       "error": null,
       "expected_failure": false,
@@ -8987,11 +8987,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 125081,
-        "median_ns": 125876,
-        "mean_ns": 129057,
-        "max_ns": 148305,
-        "spread": 0.1844990307922082
+        "min_ns": 128860,
+        "median_ns": 222417,
+        "mean_ns": 214230,
+        "max_ns": 299558,
+        "spread": 0.7674683140227591
       },
       "error": null,
       "expected_failure": false,
@@ -9048,11 +9048,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 123121,
-        "median_ns": 126552,
-        "mean_ns": 137632,
-        "max_ns": 209852,
-        "spread": 0.6853388330488653
+        "min_ns": 224427,
+        "median_ns": 274347,
+        "mean_ns": 297088,
+        "max_ns": 401215,
+        "spread": 0.6443956011911922
       },
       "error": null,
       "expected_failure": false,
@@ -9109,11 +9109,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 124543,
-        "median_ns": 125465,
-        "mean_ns": 139771,
-        "max_ns": 218820,
-        "spread": 0.7514207149404216
+        "min_ns": 202402,
+        "median_ns": 307792,
+        "mean_ns": 832822,
+        "max_ns": 2660637,
+        "spread": 7.986676066954307
       },
       "error": null,
       "expected_failure": false,
@@ -9170,11 +9170,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 15701397,
-        "median_ns": 18874948,
-        "mean_ns": 19371935,
-        "max_ns": 26107124,
-        "spread": 0.5512983135105856
+        "min_ns": 24309691,
+        "median_ns": 35949423,
+        "mean_ns": 34424280,
+        "max_ns": 47318771,
+        "spread": 0.6400403144161729
       },
       "error": null,
       "expected_failure": false,
@@ -9231,11 +9231,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 43136535,
-        "median_ns": 47646703,
-        "mean_ns": 57432395,
-        "max_ns": 124395841,
-        "spread": 1.7054549608605658
+        "min_ns": 50117177,
+        "median_ns": 55252971,
+        "mean_ns": 56886751,
+        "max_ns": 70062402,
+        "spread": 0.3609801362536686
       },
       "error": null,
       "expected_failure": false,
@@ -9292,11 +9292,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 61875466,
-        "median_ns": 66800841,
-        "mean_ns": 67330643,
-        "max_ns": 74683533,
-        "spread": 0.1917351160294524
+        "min_ns": 73441189,
+        "median_ns": 77783635,
+        "mean_ns": 78248759,
+        "max_ns": 85763691,
+        "spread": 0.15842023839590422
       },
       "error": null,
       "expected_failure": false,
@@ -9353,11 +9353,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 47144461,
-        "median_ns": 57506567,
-        "mean_ns": 72295571,
-        "max_ns": 131719701,
-        "spread": 1.470705771742556
+        "min_ns": 51949632,
+        "median_ns": 62437589,
+        "mean_ns": 68099430,
+        "max_ns": 90353292,
+        "spread": 0.6150727568932874
       },
       "error": null,
       "expected_failure": false,
@@ -9414,11 +9414,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 58684781,
-        "median_ns": 65520404,
-        "mean_ns": 66980312,
-        "max_ns": 78087245,
-        "spread": 0.29612857698496486
+        "min_ns": 77127867,
+        "median_ns": 83799656,
+        "mean_ns": 87964601,
+        "max_ns": 123251640,
+        "spread": 0.5504052785133151
       },
       "error": null,
       "expected_failure": false,
@@ -9475,11 +9475,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5011718,
-        "median_ns": 9699777,
-        "mean_ns": 9711334,
-        "max_ns": 15571691,
-        "spread": 1.088682038772644
+        "min_ns": 4926087,
+        "median_ns": 7565030,
+        "mean_ns": 7759353,
+        "max_ns": 10995230,
+        "spread": 0.8022629123744387
       },
       "error": null,
       "expected_failure": false,
@@ -9536,11 +9536,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4253517,
-        "median_ns": 6214667,
-        "mean_ns": 6272078,
-        "max_ns": 9433946,
-        "spread": 0.8335811074028584
+        "min_ns": 4894776,
+        "median_ns": 7086348,
+        "mean_ns": 7295563,
+        "max_ns": 11703079,
+        "spread": 0.9607632873801851
       },
       "error": null,
       "expected_failure": false,
@@ -9597,11 +9597,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5155434,
-        "median_ns": 7540043,
-        "mean_ns": 10314815,
-        "max_ns": 24014424,
-        "spread": 2.501178043679592
+        "min_ns": 4013536,
+        "median_ns": 7890383,
+        "mean_ns": 7578494,
+        "max_ns": 11956181,
+        "spread": 1.0066235061086388
       },
       "error": null,
       "expected_failure": false,
@@ -9658,11 +9658,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 5364493,
-        "median_ns": 7641030,
-        "mean_ns": 8441101,
-        "max_ns": 17292468,
-        "spread": 1.5610428175259095
+        "min_ns": 5653873,
+        "median_ns": 7010526,
+        "mean_ns": 7572040,
+        "max_ns": 10976650,
+        "spread": 0.7592550116781537
       },
       "error": null,
       "expected_failure": false,
@@ -9719,11 +9719,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4900980,
-        "median_ns": 6024908,
-        "mean_ns": 6442032,
-        "max_ns": 9042399,
-        "spread": 0.6873829442706842
+        "min_ns": 5188554,
+        "median_ns": 5669521,
+        "mean_ns": 7436959,
+        "max_ns": 11443456,
+        "spread": 1.1032505215167208
       },
       "error": null,
       "expected_failure": false,
@@ -9780,11 +9780,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4316957,
-        "median_ns": 4528010,
-        "mean_ns": 4821523,
-        "max_ns": 5638795,
-        "spread": 0.2919247086468449
+        "min_ns": 4346267,
+        "median_ns": 7258423,
+        "mean_ns": 6999768,
+        "max_ns": 9377472,
+        "spread": 0.6931540087977788
       },
       "error": null,
       "expected_failure": false,
@@ -9841,11 +9841,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 39453929,
-        "median_ns": 44415264,
-        "mean_ns": 47655243,
-        "max_ns": 61040047,
-        "spread": 0.4860067475901978
+        "min_ns": 35783782,
+        "median_ns": 37473062,
+        "mean_ns": 40505495,
+        "max_ns": 53338743,
+        "spread": 0.46846881634599274
       },
       "error": null,
       "expected_failure": false,
@@ -9902,11 +9902,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4551306,
-        "median_ns": 5469779,
-        "mean_ns": 5688233,
-        "max_ns": 7679263,
-        "spread": 0.5718616785065722
+        "min_ns": 4518696,
+        "median_ns": 4716852,
+        "mean_ns": 4798021,
+        "max_ns": 5074447,
+        "spread": 0.1178224375070492
       },
       "error": null,
       "expected_failure": false,
@@ -9963,11 +9963,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2947534,
-        "median_ns": 3013524,
-        "mean_ns": 3421114,
-        "max_ns": 5188471,
-        "spread": 0.7436267306980133
+        "min_ns": 2904359,
+        "median_ns": 2990033,
+        "mean_ns": 3590320,
+        "max_ns": 5669787,
+        "spread": 0.9248820999634452
       },
       "error": null,
       "expected_failure": false,
@@ -10024,11 +10024,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3590373,
-        "median_ns": 3826094,
-        "mean_ns": 3967920,
-        "max_ns": 5151555,
-        "spread": 0.408035453389279
+        "min_ns": 3595200,
+        "median_ns": 3891836,
+        "mean_ns": 4051266,
+        "max_ns": 5505477,
+        "spread": 0.4908421115381018
       },
       "error": null,
       "expected_failure": false,
@@ -10085,11 +10085,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3642612,
-        "median_ns": 3823975,
-        "mean_ns": 4372811,
-        "max_ns": 6708625,
-        "spread": 0.8017868840669722
+        "min_ns": 3663693,
+        "median_ns": 3901104,
+        "mean_ns": 3918995,
+        "max_ns": 4231190,
+        "spread": 0.14547087183525484
       },
       "error": null,
       "expected_failure": false,
@@ -10146,11 +10146,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3484888,
-        "median_ns": 3539420,
-        "mean_ns": 3681685,
-        "max_ns": 4133518,
-        "spread": 0.18325883901882228
+        "min_ns": 3406924,
+        "median_ns": 3495613,
+        "mean_ns": 4730343,
+        "max_ns": 11488204,
+        "spread": 2.311834862726509
       },
       "error": null,
       "expected_failure": false,
@@ -10207,11 +10207,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1306607,
-        "median_ns": 1660957,
-        "mean_ns": 2290379,
-        "max_ns": 5520649,
-        "spread": 2.5371168549215906
+        "min_ns": 1295986,
+        "median_ns": 1325198,
+        "mean_ns": 1389557,
+        "max_ns": 1831562,
+        "spread": 0.40414790846348997
       },
       "error": null,
       "expected_failure": false,
@@ -10268,11 +10268,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 199013,
-        "median_ns": 200601,
-        "mean_ns": 202052,
-        "max_ns": 210948,
-        "spread": 0.05949621387729872
+        "min_ns": 198943,
+        "median_ns": 199866,
+        "mean_ns": 205082,
+        "max_ns": 228623,
+        "spread": 0.14849949466142315
       },
       "error": null,
       "expected_failure": false,
@@ -10329,11 +10329,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 260773,
-        "median_ns": 271433,
-        "mean_ns": 385335,
-        "max_ns": 866859,
-        "spread": 2.2329119893307006
+        "min_ns": 259529,
+        "median_ns": 260168,
+        "mean_ns": 260348,
+        "max_ns": 262222,
+        "spread": 0.010351003966667691
       },
       "error": null,
       "expected_failure": false,
@@ -10390,11 +10390,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 592084,
-        "median_ns": 596067,
-        "mean_ns": 597671,
-        "max_ns": 605669,
-        "spread": 0.022791062078591835
+        "min_ns": 595902,
+        "median_ns": 604416,
+        "mean_ns": 642461,
+        "max_ns": 727205,
+        "spread": 0.2172394509741635
       },
       "error": null,
       "expected_failure": false,
@@ -10451,11 +10451,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 669894,
-        "median_ns": 673297,
-        "mean_ns": 969586,
-        "max_ns": 2748212,
-        "spread": 3.086777454823057
+        "min_ns": 668328,
+        "median_ns": 670310,
+        "mean_ns": 828678,
+        "max_ns": 1175344,
+        "spread": 0.7563903268636899
       },
       "error": null,
       "expected_failure": false,
@@ -10512,11 +10512,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2593246,
-        "median_ns": 2650275,
-        "mean_ns": 4100890,
-        "max_ns": 8004219,
-        "spread": 2.041664732905076
+        "min_ns": 2558613,
+        "median_ns": 3300354,
+        "mean_ns": 3402166,
+        "max_ns": 4343521,
+        "spread": 0.5408231965419467
       },
       "error": null,
       "expected_failure": false,
@@ -10573,11 +10573,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2625423,
-        "median_ns": 3563153,
-        "mean_ns": 3800795,
-        "max_ns": 6206964,
-        "spread": 1.005160597931102
+        "min_ns": 2577752,
+        "median_ns": 3623051,
+        "mean_ns": 3441943,
+        "max_ns": 4508736,
+        "spread": 0.5329717964224076
       },
       "error": null,
       "expected_failure": false,
@@ -10634,11 +10634,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 956633,
-        "median_ns": 991091,
-        "mean_ns": 1482170,
-        "max_ns": 4371423,
-        "spread": 3.4454858332887697
+        "min_ns": 952785,
+        "median_ns": 1081721,
+        "mean_ns": 1090262,
+        "max_ns": 1307066,
+        "spread": 0.32751606005615125
       },
       "error": null,
       "expected_failure": false,
@@ -10695,11 +10695,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1492059,
-        "median_ns": 1957372,
-        "mean_ns": 2380965,
-        "max_ns": 4934589,
-        "spread": 1.7587510192237348
+        "min_ns": 1389410,
+        "median_ns": 1432501,
+        "mean_ns": 1519074,
+        "max_ns": 1760615,
+        "spread": 0.2591307091583182
       },
       "error": null,
       "expected_failure": false,
@@ -10756,11 +10756,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2102815,
-        "median_ns": 2762994,
-        "mean_ns": 3586582,
-        "max_ns": 7234755,
-        "spread": 1.857383693196583
+        "min_ns": 2097002,
+        "median_ns": 2438596,
+        "mean_ns": 2478967,
+        "max_ns": 3384944,
+        "spread": 0.5281489840875652
       },
       "error": null,
       "expected_failure": false,
@@ -10817,11 +10817,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 4211531,
-        "median_ns": 5183865,
-        "mean_ns": 5901488,
-        "max_ns": 10556900,
-        "spread": 1.2240613904875994
+        "min_ns": 4171559,
+        "median_ns": 4349214,
+        "mean_ns": 4547329,
+        "max_ns": 5549600,
+        "spread": 0.316848285690242
       },
       "error": null,
       "expected_failure": false,
@@ -10878,11 +10878,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 804496,
-        "median_ns": 816989,
-        "mean_ns": 1015484,
-        "max_ns": 1907989,
-        "spread": 1.3506828121308856
+        "min_ns": 803430,
+        "median_ns": 811186,
+        "mean_ns": 844522,
+        "max_ns": 1055352,
+        "spread": 0.3105600934927378
       },
       "error": null,
       "expected_failure": false,
@@ -10939,11 +10939,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1186732,
-        "median_ns": 1190618,
-        "mean_ns": 1427322,
-        "max_ns": 2645535,
-        "spread": 1.2252485683905334
+        "min_ns": 1190237,
+        "median_ns": 1295950,
+        "mean_ns": 1392614,
+        "max_ns": 1880380,
+        "spread": 0.5325382923723909
       },
       "error": null,
       "expected_failure": false,
@@ -11000,11 +11000,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1804678,
-        "median_ns": 1824851,
-        "mean_ns": 1936498,
-        "max_ns": 2464940,
-        "spread": 0.3618169373828329
+        "min_ns": 1803229,
+        "median_ns": 1828273,
+        "mean_ns": 1834057,
+        "max_ns": 1884924,
+        "spread": 0.04468424573354198
       },
       "error": null,
       "expected_failure": false,
@@ -11061,11 +11061,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 3709042,
-        "median_ns": 4039545,
-        "mean_ns": 4247467,
-        "max_ns": 5278614,
-        "spread": 0.3885516809442648
+        "min_ns": 3661434,
+        "median_ns": 3861957,
+        "mean_ns": 4064521,
+        "max_ns": 5370241,
+        "spread": 0.4424717830882115
       },
       "error": null,
       "expected_failure": false,
@@ -11122,11 +11122,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 337039,
-        "median_ns": 408572,
-        "mean_ns": 460162,
-        "max_ns": 724281,
-        "spread": 0.9477937793093996
+        "min_ns": 335212,
+        "median_ns": 339758,
+        "mean_ns": 373510,
+        "max_ns": 574700,
+        "spread": 0.7048781779972804
       },
       "error": null,
       "expected_failure": false,
@@ -11183,11 +11183,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 544721,
-        "median_ns": 560239,
-        "mean_ns": 593615,
-        "max_ns": 796744,
-        "spread": 0.44984908226667547
+        "min_ns": 546336,
+        "median_ns": 551041,
+        "mean_ns": 587673,
+        "max_ns": 695376,
+        "spread": 0.27046989243994546
       },
       "error": null,
       "expected_failure": false,
@@ -11244,11 +11244,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 882979,
-        "median_ns": 928558,
-        "mean_ns": 973557,
-        "max_ns": 1195310,
-        "spread": 0.33636132584071216
+        "min_ns": 880256,
+        "median_ns": 890308,
+        "mean_ns": 1100374,
+        "max_ns": 1751602,
+        "spread": 0.9787017526518913
       },
       "error": null,
       "expected_failure": false,
@@ -11305,11 +11305,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1890061,
-        "median_ns": 2022481,
-        "mean_ns": 2740941,
-        "max_ns": 6029981,
-        "spread": 2.0469512445357956
+        "min_ns": 1905463,
+        "median_ns": 2033760,
+        "mean_ns": 2057110,
+        "max_ns": 2308839,
+        "spread": 0.19834002045472426
       },
       "error": null,
       "expected_failure": false,
@@ -11366,11 +11366,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 380806,
-        "median_ns": 384281,
-        "mean_ns": 441481,
-        "max_ns": 784528,
-        "spread": 1.0505905834532543
+        "min_ns": 382137,
+        "median_ns": 387108,
+        "mean_ns": 392204,
+        "max_ns": 432280,
+        "spread": 0.12953232689585337
       },
       "error": null,
       "expected_failure": false,
@@ -11427,11 +11427,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 707170,
-        "median_ns": 780332,
-        "mean_ns": 1116348,
-        "max_ns": 1940370,
-        "spread": 1.580352977963226
+        "min_ns": 708680,
+        "median_ns": 719332,
+        "mean_ns": 798010,
+        "max_ns": 1255415,
+        "spread": 0.7600593328254547
       },
       "error": null,
       "expected_failure": false,
@@ -11488,11 +11488,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1250599,
-        "median_ns": 1335943,
-        "mean_ns": 1672979,
-        "max_ns": 2226264,
-        "spread": 0.7303193324864908
+        "min_ns": 1252217,
+        "median_ns": 1261527,
+        "mean_ns": 1322135,
+        "max_ns": 1574853,
+        "spread": 0.255750372366188
       },
       "error": null,
       "expected_failure": false,
@@ -11549,11 +11549,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 2277167,
-        "median_ns": 2297581,
-        "mean_ns": 2958663,
-        "max_ns": 4919764,
-        "spread": 1.150164890813425
+        "min_ns": 2289725,
+        "median_ns": 2337049,
+        "mean_ns": 2356830,
+        "max_ns": 2493550,
+        "spread": 0.08721468826712662
       },
       "error": null,
       "expected_failure": false,
@@ -11610,11 +11610,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 356945,
-        "median_ns": 668439,
-        "mean_ns": 662279,
-        "max_ns": 1491027,
-        "spread": 1.696612555521147
+        "min_ns": 354571,
+        "median_ns": 360153,
+        "mean_ns": 373739,
+        "max_ns": 459975,
+        "spread": 0.2926645064736376
       },
       "error": null,
       "expected_failure": false,
@@ -11671,11 +11671,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1115237,
-        "median_ns": 1223506,
-        "mean_ns": 1463782,
-        "max_ns": 2085623,
-        "spread": 0.7931191183369759
+        "min_ns": 1082323,
+        "median_ns": 1095201,
+        "mean_ns": 1169281,
+        "max_ns": 1604053,
+        "spread": 0.4763783086392361
       },
       "error": null,
       "expected_failure": false,
@@ -11732,11 +11732,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 552035,
-        "median_ns": 555947,
-        "mean_ns": 562319,
-        "max_ns": 583984,
-        "spread": 0.0574677082527651
+        "min_ns": 549655,
+        "median_ns": 563007,
+        "mean_ns": 584488,
+        "max_ns": 702121,
+        "spread": 0.27080657966952454
       },
       "error": null,
       "expected_failure": false,
@@ -11793,11 +11793,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1393510,
-        "median_ns": 1410211,
-        "mean_ns": 1954015,
-        "max_ns": 3775949,
-        "spread": 1.6894202356952257
+        "min_ns": 1379918,
+        "median_ns": 1683018,
+        "mean_ns": 1669479,
+        "max_ns": 2181046,
+        "spread": 0.4760067925595567
       },
       "error": null,
       "expected_failure": false,
@@ -11854,11 +11854,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 738379,
-        "median_ns": 1128009,
-        "mean_ns": 1352434,
-        "max_ns": 3222198,
-        "spread": 2.201949629834514
+        "min_ns": 729035,
+        "median_ns": 768678,
+        "mean_ns": 770769,
+        "max_ns": 832330,
+        "spread": 0.13438006551507914
       },
       "error": null,
       "expected_failure": false,
@@ -12037,11 +12037,11 @@
       "timing": {
         "iterations": 7,
         "warmup": 1,
-        "min_ns": 1699611,
-        "median_ns": 1785264,
-        "mean_ns": 2047604,
-        "max_ns": 3366948,
-        "spread": 0.9339442233753663
+        "min_ns": 1684925,
+        "median_ns": 1802590,
+        "mean_ns": 1921528,
+        "max_ns": 2671037,
+        "spread": 0.5470528517300107
       },
       "error": null,
       "expected_failure": false,
