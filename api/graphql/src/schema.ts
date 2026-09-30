@@ -8,7 +8,7 @@ export const typeDefs = `
   """
   directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
   directive @extends on OBJECT | INTERFACE
-  directive @external on FIELD_DEFINITION
+  directive @external on FIELD DEFINITION
   directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
   directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
 
@@ -65,6 +65,43 @@ export const typeDefs = `
     newValue: String
     """Unix timestamp (seconds) when the governance action was executed."""
     timestamp: Int!
+    """Addresses that approved this action."""
+    approvedBy: [String!]!
+    """Number of approvals required to execute."""
+    requiredApprovals: Int!
+    """Status of the governance action."""
+    status: GovernanceStatus!
+  }
+
+  enum GovernanceStatus {
+    approved
+    pending
+    rejected
+  }
+
+  """
+  Role assignment for an account in the contract's RBAC system.
+  """
+  type RoleAssignment {
+    address: String!
+    role: Role!
+    grantedAt: Int!
+    grantedBy: String!
+  }
+
+  enum Role {
+    Admin
+    Operator
+    Auditor
+    Viewer
+  }
+
+  """
+  Cap configuration for the contract.
+  """
+  type CapConfig {
+    globalMaxLogs: Int!
+    eventMaxLogs: JSON!
   }
 
   """
@@ -85,7 +122,7 @@ export const typeDefs = `
   }
 
   """
-  Input payload for the \`logEvent\` mutation. Requires an API key
+  Input payload for the \logEvent\ mutation. Requires an API key
   sent via the \`x-api-key\` header or \`Authorization: Bearer <key>\`.
   """
   input EventInput {
@@ -97,13 +134,24 @@ export const typeDefs = `
     metadata: String!
   }
 
+  input RoleAssignmentInput {
+    address: String!
+    role: Role!
+  }
+
+  input SetCapInput {
+    globalMaxLogs: Int
+    eventType: String
+    eventMaxLogs: Int
+  }
+
   type Query {
     """
     Retrieve a paginated list of events. Optionally apply server-side
-    filtering via the \`filter\` argument.
+    filtering via the \filter\ argument.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       events(limit: 10, offset: 0, filter: { type: "payment" }) {
         index
@@ -113,7 +161,7 @@ export const typeDefs = `
         event_hash
       }
     }
-    \`\`\`
+    \`\`
     """
     events(limit: Int = 50, offset: Int = 0, filter: EventFilter): [Event!]!
 
@@ -121,7 +169,7 @@ export const typeDefs = `
     Fetch a single event by its sequential index.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       event(index: 42) {
         id
@@ -133,7 +181,7 @@ export const typeDefs = `
         prev_hash
       }
     }
-    \`\`\`
+    \`\`
     """
     event(index: Int!): Event
 
@@ -142,7 +190,7 @@ export const typeDefs = `
     iterating over events of a specific category.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       eventByType(type: "payment", typeIndex: 0) {
         index
@@ -150,7 +198,7 @@ export const typeDefs = `
         metadata
       }
     }
-    \`\`\`
+    \`\`
     """
     eventByType(type: String!, typeIndex: Int!): Event
 
@@ -159,7 +207,7 @@ export const typeDefs = `
     global max-logs cap, and per-type event counts.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       statistics {
         totalEvents
@@ -167,7 +215,7 @@ export const typeDefs = `
         eventsByType
       }
     }
-    \`\`\`
+    \`\`
     """
     statistics: ContractStats!
 
@@ -176,7 +224,7 @@ export const typeDefs = `
     matched case-insensitively against the hex-encoded metadata field.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       searchEvents(query: "invoice") {
         index
@@ -185,7 +233,7 @@ export const typeDefs = `
         timestamp
       }
     }
-    \`\`\`
+    \`\`
     """
     searchEvents(query: String!): [Event!]!
 
@@ -194,7 +242,7 @@ export const typeDefs = `
     pause events). Filter by action types or return all.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     query {
       governanceHistory(
         types: ["transfer_ownership", "set_global_max_logs"]
@@ -208,9 +256,13 @@ export const typeDefs = `
         timestamp
       }
     }
-    \`\`\`
+    \`\`
     """
     governanceHistory(types: [String!], limit: Int = 50, offset: Int = 0): [GovernanceEvent!]!
+
+    roleAssignments: [RoleAssignment!]!
+    caps: CapConfig!
+    governanceRecords(types: [String!], limit: Int = 50, offset: Int = 0): [GovernanceEvent!]!
 
     _service: _Service!
     _entities(representations: [_Any!]!): [_Entity]!
@@ -221,7 +273,7 @@ export const typeDefs = `
     Log a new event on-chain. Requires a valid API key.
 
     **Example:**
-    \`\`\`graphql
+    \`\`\graphql
     mutation {
       logEvent(
         submitter: "GABC1234..."
@@ -235,9 +287,14 @@ export const typeDefs = `
         prev_hash
       }
     }
-    \`\`\`
+    \`\`
     """
     logEvent(submitter: String!, eventType: String!, metadata: String!): Event!
+
+    assignRole(address: String!, role: Role!): RoleAssignment!
+    revokeRole(address: String!): Boolean!
+    setCap(input: SetCapInput!): CapConfig!
+    removeEventCap(eventType: String!): CapConfig!
   }
 
   type Subscription {
@@ -248,7 +305,7 @@ export const typeDefs = `
     schemas can opt out for tests.
 
     **Example (subscribe with advanced filters):**
-    \`\`\`graphql
+    \`\`\graphql
     subscription($filter: EventFilter) {
       eventLogged(filter: $filter) {
         index
@@ -259,7 +316,7 @@ export const typeDefs = `
         event_hash
       }
     }
-    \`\`\`
+    \`\`
 
     **WebSocket transport:**
     Connect to \`ws://localhost:4000/graphql\` with the \`graphql-ws\`
