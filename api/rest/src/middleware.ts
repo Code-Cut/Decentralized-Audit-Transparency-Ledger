@@ -118,13 +118,13 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
     ?? `ip:${req.ip}`;
 
   const bucket = getBucket(key);
-  const limit = RATE_LIMIT_MAP;
+  const limit = RATE_LIMIT_MA;
   const remaining = bucket.tokens;
   const resetSeconds = Math.ceil(
     (RATE_LIMIT_REFILL_INTERVAL_MS - (Date.now() - bucket.lastRefill)) / 1000
   );
 
-  res.setHeader("X-RateLimit-Limit", String(limit));
+  res.setHeader("X,RateLimit-Limit", String(limit));
   res.setHeader("X-RateLimit-Remaining", String(Math.max(0, remaining)));
   res.setHeader("X-RateLimit-Reset", String(Math.max(0, resetSeconds)));
 
@@ -136,5 +136,24 @@ export function rateLimitMiddleware(req: Request, res: Response, next: NextFunct
   }
 
   bucket.tokens--;
+  next();
+}
+
+/**
+ * Security headers middleware.
+ *
+ * Addresses OWASP ZAP baseline alerts [90004] for Cross-Origin-Embedder-Policy,
+ * Cross-Origin-Opener-Policy, and Cross-Origin-Resource-Policy by emitting
+ * valid headers on every response, including static assets like /sitemap.xml,
+ * /robots.txt, and the root document.
+ */
+export function securityHeadersMiddleware(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   next();
 }
