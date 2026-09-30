@@ -1,7 +1,7 @@
 # OWASP ZAP Baseline Security Scan Report
 
-**Target**: AuditLedger Smart Contract Authorization & API Surface  
-**Scan Type**: OWASP ZAP Automated Baseline Scan & Architectural Security Review  
+**Target**: AuditLedger HTTP Surface (http://localhost:3000)  
+**Scan Type**: OWASP ZAP Automated Baseline Scan  
 **Date**: September 24, 2026  
 **Status**: REMEDIATED via RBAC Implementation (#686, #689, #688, #687) and API Security Header Hardening
 
@@ -16,6 +16,13 @@ The automated baseline security assessment identified risks in the legacy access
 3. **Audit Inobservability**: Lack of role segregation between event submitters, auditors, and governance administrators.
 4. **Missing Cross-Origin Isolation Headers**: ZAP baseline flagged COEP, COOP, and CORP as missing or invalid on the root document and static assets (/robots.txt, /sitemap.xml).
 5. **Missing Permissions-Policy, X-Powered-By leakage, and cache control**: ZAP alerts 10063, 10037, and 10049 were open on all crawled routes.
+
+The ZAP baseline scan additionally flagged four HTTP response header findings across
+`/`, `/robots.txt`, and `/sitemap.xml`:
+1. **CSP: Failure to Define Directive with No Fallback** [10055]
+2. **Permissions Policy Header Not Set** [10063]
+3. **Server Leaks Information via "X-Powered-By"** [10037]
+4. **Storable and Cacheable Content** [10049]
 
 ---
 
@@ -33,7 +40,7 @@ The automated baseline security assessment identified risks in the legacy access
     - `Submitter` (Level 2): Authorized to invoke `log_event` and `log_event_with_nonce`.
     - `Viewer` (Level 1): Read-only ledger queries.
   - Implemented persistent storage key `RbacStorageKey::Role(Address)`.
-  - Added safety guard preventing revocation of the final surviving Admin (`CannotRevokeLastAdmin`).
+  - Added safety guard preventing revocation of the final surviveng Admin (`CannotRevokeLastAdmin`).
 
 ### Finding SEC-002: Missing Minimum Role Precedence Helpers
 - &bull; **Severity**: MEDIUM (CVSS 5.3)

@@ -112,6 +112,18 @@ app.use(
   })
 );
 
+// ZAP baseline: ensure Permissions-Policy is always present and CSP has
+// fallbacks for directives that would otherwise inherit from default-src.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Permissions-Policy")) {
+    res.setHeader(
+      "Permissions-Policy",
+      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    );
+  }
+  next();
+});
+
 const cspViolationStore = new ViolationReportStore();
 app.post(
   "/csp-report",
@@ -154,11 +166,13 @@ app.use(
   })
 );
 
-// ── Cache-Control hardening for all responses (ZAP 10049) ───────────────────
-// Prevents sensitive API responses from being stored by shared caches.
-
+// ZAP 10049: prevent caching of dynamic API responses. Static assets are
+// served by the frontend; every REST response here is user- or
+// state-dependent, so mark it non-storable and non-cacheable.
 app.use((_req, res, next) => {
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  if (!res.getHeader("Cache-Control")) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  }
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
   next();
@@ -214,6 +228,15 @@ function resolveContext(req: express.Request): { apiKey?: string; role?: Role } 
 // ── Health Check Endpoints (#268) ─────────────────────────────────────────────
 
 const startTime = Date.now();
+
+// Ensure every response (including static-ish endpoints below) carries the
+// baseline hardening headers ZAP flags: no X-Powered-By, a Permissions-Policy,
+// and explicit no-store caching for dynamic content.
+app.use((_req, res, next) => {
+  res.removeHeader("X-Powered-By");
+  res.setHeader("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+  next();
+});
 
 app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
