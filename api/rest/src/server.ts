@@ -69,6 +69,18 @@ app.use(
   })
 );
 
+// ZAP baseline: ensure Permissions-Policy is always present and CSP has
+// fallbacks for directives that would otherwise inherit from default-src.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Permissions-Policy")) {
+    res.setHeader(
+      "Permissions-Policy",
+      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    );
+  }
+  next();
+});
+
 const cspViolationStore = new ViolationReportStore();
 app.post(
   "/csp-report",
