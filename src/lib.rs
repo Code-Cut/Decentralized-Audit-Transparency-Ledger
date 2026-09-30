@@ -1,12 +1,18 @@
 #![no_std]
 // Migration to #[contractevent] macro is deferred (issue tracked separately)
 #![allow(deprecated)]
+// Guest-heap `alloc` is only linked for host test builds: the contract path avoids
+// it entirely, so the wasm build needs no `#[global_allocator]`.
+#[cfg(test)]
 #[macro_use]
 extern crate alloc;
 
 pub mod regulator;
 pub mod regulator_events;
 pub mod disclosure;
+// A Soroban WASM exposes a single contract interface, so this standalone
+// contract is opt-in: enabled for host tests and for feature-gated builds.
+#[cfg(any(test, feature = "contract-event-privacy"))]
 pub mod contract_event_privacy;
 pub mod data_sharing;
 pub mod tamper_evidence;
@@ -15,6 +21,7 @@ pub mod tax;
 pub mod vat_engine;
 pub mod tax_engines;
 pub mod tax_audit_trail;
+#[cfg(test)]
 pub mod test_data_factories;
 
 // ── Automated Regulatory Reporting ──────────────────────────────────────────
@@ -34,8 +41,8 @@ mod regulator_tests;
 mod regulatory_reporting_tests;
 
 use soroban_sdk::{
-    bytes, contract, contracterror, contractimpl, contracttype, panic_with_error, Address, Bytes, BytesN, Env, Symbol,
-    Vec,
+    contract, contracterror, contractimpl, contracttype, panic_with_error, Address, Bytes, BytesN, Env,
+    String, Symbol, Vec,
 };
 
 pub mod supply_chain;
@@ -59,11 +66,20 @@ pub mod runbook_automation;
 pub mod incident_management;
 
 // Privacy-preserving analytics suite: DP, FL, SMPC, and HE (issue #528)
+// A Soroban WASM exposes a single contract interface, so this standalone
+// contract is opt-in: enabled for host tests and for feature-gated builds.
+#[cfg(any(test, feature = "privacy-analytics"))]
 pub mod privacy_preserving_analytics;
 // Contract event data governance and catalog (issue #527)
+// A Soroban WASM exposes a single contract interface, so this standalone
+// contract is opt-in: enabled for host tests and for feature-gated builds.
+#[cfg(any(test, feature = "data-governance"))]
 pub mod data_governance;
 
 // Multi-tenant support with namespace isolation (issue #394)
+// A Soroban WASM exposes a single contract interface, so this standalone
+// contract is opt-in: enabled for host tests and for feature-gated builds.
+#[cfg(any(test, feature = "multi-tenant"))]
 pub mod multi_tenant;
 
 #[cfg(test)]
@@ -971,7 +987,7 @@ pub struct ArchiveConfig {
     /// Base URL (UTF-8 bytes) under which archived event payloads are retrievable.
     pub base_url: Bytes,
     /// Compression mode: 0 = none, 1 = run-length encoding.
-    pub compression: u8,
+    pub compression: u32,
 }
 
 impl ArchiveConfig {
@@ -2887,7 +2903,7 @@ impl AuditLedger {
                 if config.compression == 1 {
                     let stored_meta = Self::compress_bytes(&env, &meta);
                     let mut stored_evt = evt.clone();
-                    stored_evt.metadata = stored_meta;
+                    stored_evt.metadata = stored_meta.clone();
                     env.storage()
                         .instance()
                         .set(&DataKey::ArchivedEventData(id.clone()), &stored_evt);
@@ -4838,43 +4854,81 @@ impl AuditLedger {
         true
     }
 
-    fn required_fields(env: &Env, definition: &Bytes) -> Vec<String> {
-        let mut result: Vec<String> = Vec::new(env);
-        let text = match core::str::from_utf8(definition.as_slice()) {
-            Ok(value) => value,
-            Err(_) => return result,
-        };
-        let mut cursor = 0usize;
-        while cursor + 9 < text.len() {
-            let chunk = &text[cursor..];
-            let required_pos = match chunk.find("\"required\"") {
-                Some(pos) => pos,
-                None => break,
-            };
-            let after_required = &chunk[required_pos + "\"required\"".len()..];
-            let bracket_start = match after_required.find('[') {
-                Some(pos) => pos,
-                None => break,
-            };
-            let list = &after_required[bracket_start + 1..];
-            let mut parse_cursor = 0usize;
-            while parse_cursor < list.len() {
-                let quote_pos = match list[parse_cursor..].find('"') {
-                    Some(pos) => parse_cursor + pos,
-                    None => break,
-                };
-                let name_start = quote_pos + 1;
-                let name_end = match &list[name_start..].find('"') {
-                    Some(pos) => name_start + pos,
-                    None => break,
-                };
-                if name_start < name_end {
-                    let field_name = &list[name_start..name_end];
-                    result.push_back(String::from_str(env, field_name));
-                }
-                parse_cursor = name_end + 1;
+    /// True when `data` contains `pattern` at byte offset `at`.
+    fn matches_at(data: &Bytes, at: u32, pattern: &[u8]) -> bool {
+        if at + pattern.len() as u32 > data.len() {
+            return false;
+        }
+        for (offset, expected) in pattern.iter().enumerate() {
+            if data.get(at + offset as u32) != Some(*expected) {
+                return false;
             }
-            break;
+        }
+        true
+    }
+
+    /// Metadata schema definitions are bounded by the contract's metadata size
+    /// limit, so the JSON is scanned in place on the host `Bytes` object: no guest
+    /// heap (and therefore no global allocator) is required.
+    fn required_fields(env: &Env, definition: &Bytes) -> Vec<String> {
+        const MAX_DEFINITION_LEN: u32 = 4096;
+        let mut result: Vec<String> = Vec::new(env);
+        if definition.is_empty() || definition.len() > MAX_DEFINITION_LEN {
+            return result;
+        }
+        let len = definition.len();
+        let required_key = b"\"required\"";
+        let mut i = 0u32;
+        while i + required_key.len() as u32 <= len {
+            if !Self::matches_at(definition, i, required_key) {
+                i += 1;
+                continue;
+            }
+            let mut j = i + required_key.len() as u32;
+            if j >= len || definition.get(j) != Some(b'[') {
+                i = j;
+                continue;
+            }
+            j += 1;
+            while j < len {
+                match definition.get(j) {
+                    Some(b'"') => {
+                        let name_start = j + 1;
+                        let mut k = name_start;
+                        let mut name_end = None;
+                        while k < len {
+                            if definition.get(k) == Some(b'"') {
+                                name_end = Some(k);
+                                break;
+                            }
+                            k += 1;
+                        }
+                        match name_end {
+                            Some(end) => {
+                                if end > name_start {
+                                    let mut name = [0u8; 128];
+                                    let name_len = (end - name_start) as usize;
+                                    if name_len <= name.len() {
+                                        definition
+                                            .slice(name_start..end)
+                                            .copy_into_slice(&mut name[..name_len]);
+                                        if let Ok(text) =
+                                            core::str::from_utf8(&name[..name_len])
+                                        {
+                                            result.push_back(String::from_str(env, text));
+                                        }
+                                    }
+                                }
+                                j = end + 1;
+                            }
+                            None => return result,
+                        }
+                    }
+                    Some(b']') => return result,
+                    _ => j += 1,
+                }
+            }
+            return result;
         }
         result
     }
@@ -5460,31 +5514,11 @@ impl AuditLedger {
     }
 
     fn u64_to_bytes(env: &Env, v: u64) -> Bytes {
-        bytes!(
-            env,
-            [
-                (v & 0xff) as u8,
-                ((v >> 8) & 0xff) as u8,
-                ((v >> 16) & 0xff) as u8,
-                ((v >> 24) & 0xff) as u8,
-                ((v >> 32) & 0xff) as u8,
-                ((v >> 40) & 0xff) as u8,
-                ((v >> 48) & 0xff) as u8,
-                ((v >> 56) & 0xff) as u8,
-            ]
-        )
+        Bytes::from_array(env, &v.to_le_bytes())
     }
 
     fn u32_to_bytes(env: &Env, v: u32) -> Bytes {
-        bytes!(
-            env,
-            [
-                (v & 0xff) as u8,
-                ((v >> 8) & 0xff) as u8,
-                ((v >> 16) & 0xff) as u8,
-                ((v >> 24) & 0xff) as u8,
-            ]
-        )
+        Bytes::from_array(env, &v.to_le_bytes())
     }
 
     fn bytes_contains(haystack: &Bytes, needle: &Bytes) -> bool {
@@ -5522,6 +5556,13 @@ impl AuditLedger {
             .unwrap_or(1000)
     }
 
+    fn default_nonce_max_value(env: &Env) -> u32 {
+        env.storage()
+            .instance()
+            .get(&DataKey::DefaultNonceMaxValue)
+            .unwrap_or(u32::MAX)
+    }
+
     // ═══════════════════════════════════════════════════════════════════════
     // RBAC (issue #365)
     // ═══════════════════════════════════════════════════════════════════════
@@ -5538,8 +5579,8 @@ impl AuditLedger {
             Self::require_owner_or_multisig(&env, &caller);
         }
         match role {
-            Some(r) => env.storage().instance().set(&DataKey::Role(target), &r),
-            None => env.storage().instance().remove(&DataKey::Role(target)),
+            Some(r) => env.storage().instance().set(&DataKey::Role(target.clone()), &r),
+            None => env.storage().instance().remove(&DataKey::Role(target.clone())),
         }
         env.events().publish(
             (Symbol::new(&env, "rbac"), Symbol::new(&env, "role_set")),
@@ -5613,11 +5654,11 @@ impl AuditLedger {
             Self::dedup_policy_from_discriminant(&env, p as u32);
             env.storage()
                 .instance()
-                .set(&DataKey::DedupPolicyConfigForType(event_type), &p);
+                .set(&DataKey::DedupPolicyConfigForType(event_type.clone()), &p);
         } else {
             env.storage()
                 .instance()
-                .remove(&DataKey::DedupPolicyConfigForType(event_type));
+                .remove(&DataKey::DedupPolicyConfigForType(event_type.clone()));
         }
         env.events().publish(
             (Symbol::new(&env, "dedup"), Symbol::new(&env, "policy_set_type")),
@@ -5708,7 +5749,7 @@ impl AuditLedger {
                     if let Some((stored_index, _)) = env
                         .storage()
                         .instance()
-                        .get::<_, (u32, u64)>(&DataKey::EventContentHashWithTs(content_hash))
+                        .get::<_, (u32, u64)>(&DataKey::EventContentHashWithTs(content_hash.clone()))
                     {
                         if stored_index != idx {
                             env.storage()
@@ -5862,7 +5903,7 @@ impl AuditLedger {
     // ── private helpers ─────────────────────────────────────────────────────
 
     /// Whether the leading byte marks an archived payload as compressed.
-    fn is_compressed_tag(env: &Env, payload: &Bytes) -> bool {
+    fn is_compressed_tag(_env: &Env, payload: &Bytes) -> bool {
         payload.len() >= 1 && payload.get(0) == Some(0x01)
     }
 
@@ -5982,12 +6023,12 @@ impl AuditLedger {
     /// Compute the `Vec<FieldChange>` between two event snapshots.
     fn diff_events(env: &Env, from: &Event, to: &Event) -> Vec<FieldChange> {
         let mut changes: Vec<FieldChange> = Vec::new(env);
-        Self::push_field_change(env, &mut changes, "metadata", &bytes_field(env, &from.metadata), &bytes_field(env, &to.metadata));
-        Self::push_field_change(env, &mut changes, "event_type", &bytes_field(env, &symbol_bytes(env, &from.event_type)), &bytes_field(env, &symbol_bytes(env, &to.event_type)));
-        Self::push_field_change(env, &mut changes, "category", &bytes_field(env, &symbol_bytes(env, &from.category)), &bytes_field(env, &symbol_bytes(env, &to.category)));
-        Self::push_field_change(env, &mut changes, "submitter", &bytes_field(env, &strkey_bytes(env, &from.submitter)), &bytes_field(env, &strkey_bytes(env, &to.submitter)));
-        Self::push_field_change(env, &mut changes, "timestamp", &bytes_field(env, &Self::u64_to_bytes(env, from.timestamp)), &bytes_field(env, &Self::u64_to_bytes(env, to.timestamp)));
-        Self::push_field_change(env, &mut changes, "version", &bytes_field(env, &Self::u32_to_bytes(env, from.version)), &bytes_field(env, &Self::u32_to_bytes(env, to.version)));
+        Self::push_field_change(env, &mut changes, "metadata", &Self::bytes_field(env, &from.metadata), &Self::bytes_field(env, &to.metadata));
+        Self::push_field_change(env, &mut changes, "event_type", &Self::bytes_field(env, &Self::symbol_bytes(env, &from.event_type)), &Self::bytes_field(env, &Self::symbol_bytes(env, &to.event_type)));
+        Self::push_field_change(env, &mut changes, "category", &Self::bytes_field(env, &Self::symbol_bytes(env, &from.category)), &Self::bytes_field(env, &Self::symbol_bytes(env, &to.category)));
+        Self::push_field_change(env, &mut changes, "submitter", &Self::bytes_field(env, &Self::strkey_bytes(env, &from.submitter)), &Self::bytes_field(env, &Self::strkey_bytes(env, &to.submitter)));
+        Self::push_field_change(env, &mut changes, "timestamp", &Self::bytes_field(env, &Self::u64_to_bytes(env, from.timestamp)), &Self::bytes_field(env, &Self::u64_to_bytes(env, to.timestamp)));
+        Self::push_field_change(env, &mut changes, "version", &Self::bytes_field(env, &Self::u32_to_bytes(env, from.version)), &Self::bytes_field(env, &Self::u32_to_bytes(env, to.version)));
         changes
     }
 
@@ -6005,8 +6046,10 @@ impl AuditLedger {
         b.clone()
     }
 
-    fn symbol_bytes(_env: &Env, s: &Symbol) -> Bytes {
-        s.to_string().to_bytes()
+    fn symbol_bytes(env: &Env, s: &Symbol) -> Bytes {
+        // `Symbol::to_string` is host-only; XDR is the deterministic on-chain form.
+        use soroban_sdk::xdr::ToXdr;
+        s.to_xdr(env)
     }
 
     fn strkey_bytes(_env: &Env, addr: &Address) -> Bytes {
@@ -6027,11 +6070,6 @@ pub mod cbdc_privacy;
 #[cfg(test)]
 mod cbdc_tests;
 
-use cbdc_types::*;
-use cbdc_logging::*;
-use cbdc_interop::*;
-use cbdc_offline::*;
-use cbdc_privacy::*;
 
 // SupTech Integration Modules
 pub mod suptech_types;
@@ -6044,12 +6082,6 @@ pub mod suptech_integration;
 #[cfg(test)]
 mod suptech_tests;
 
-use suptech_types::*;
-use suptech_feeds::*;
-use suptech_reporting::*;
-use suptech_api::*;
-use suptech_rules::*;
-use suptech_integration::*;
 
 // Regulatory Sandbox Modules
 pub mod sandbox_types;
