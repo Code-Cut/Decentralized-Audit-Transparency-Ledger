@@ -45,6 +45,19 @@ const port = process.env.PORT || 3002;
 app.use(cors());
 app.use(express.json());
 
+// ── Cross-Origin isolation headers (COEP / COOP / CORP) ─────────────────────
+// ZAP baseline flags missing/invalid Cross-Origin-Embedder-Policy,
+// Cross-Origin-Opener-Policy, and Cross-Origin-Resource-Policy headers.
+// These are set globally so every response (including /, /robots.txt,
+// /sitemap.xml, and API routes) carries them.
+
+app.use((_req, res, next) => {
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  next();
+});
+
 // ── Security headers + CSP (nonces, report-only mode, violation reporting) ─
 
 app.use(securityHeaders());
@@ -153,6 +166,9 @@ app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   if (req.path === "/robots.txt") {
     return res.type("text/plain").send("User-agent: *\nDisallow: /");
   }
