@@ -56,6 +56,46 @@ app.use(
   })
 );
 
+// ── Permissions-Policy header (ZAP 10063) ────────────────────────────────────
+// Explicitly deny powerful browser features to all origins so the header is
+// always present, even on static responses like /robots.txt and /sitemap.xml.
+
+app.use((_req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    [
+      "accelerometer=()",
+      "ambient-light-sensor=()",
+      "autoplay=()",
+      "battery=()",
+      "camera=()",
+      "display-capture=()",
+      "document-domain=()",
+      "encrypted-media=()",
+      "execution-while-not-rendered=()",
+      "execution-while-out-of-viewport=()",
+      "fullscreen=()",
+      "geolocation=()",
+      "gyroscope=()",
+      "hid=()",
+      "idle-detection=()",
+      "magnetometer=()",
+      "microphone=()",
+      "midi=()",
+      "navigation-override=()",
+      "payment=()",
+      "picture-in-picture=()",
+      "publickey-credentials-get=()",
+      "screen-wake-lock=()",
+      "serial=()",
+      "usb=()",
+      "web-share=()",
+      "xr-spatial-tracking=()",
+    ].join(", ")
+  );
+  next();
+});
+
 const cspViolationStore = new ViolationReportStore();
 app.post(
   "/csp-report",
