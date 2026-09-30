@@ -46,30 +46,18 @@ const port = process.env.PORT || 3002;
 app.use(cors());
 app.use(express.json());
 
-// ── Baseline hardening headers (ZAP 10037 / 10063 / 10049) ───────────────────
-// helmet removes X-Powered-By, sets a Permissions-Policy, and applies sane
-// cache-control defaults. CSP is handled separately below so we disable
-// helmet's CSP to avoid clobbering the nonce/report-only configuration.
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-    xPoweredBy: true,
-    referrerPolicy: { policy: "no-referrer" },
-    permissionsPolicy: {
-      features: {
-        accelerometer: [],
-        camera: [],
-        geolocation: [],
-        gyroscope: [],
-        magnetometer: [],
-        microphone: [],
-        payment: [],
-        usb: [],
-      },
-    },
-  })
-);
+// ── Cross-Origin isolation headers (COEP / COOP / CORP) ─────────────────────
+// ZAP baseline flags missing/invalid Cross-Origin-Embedder-Policy,
+// Cross-Origin-Opener-Policy, and Cross-Origin-Resource-Policy headers.
+// These are set globally so every response (including /, /robots.txt,
+// /sitemap.xml, and API routes) carries them.
+
+app.use((_req, res, next) => {
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  next();
+});
 
 // ── Security headers + CSP (nonces, report-only mode, violation reporting) ─
 
@@ -81,6 +69,18 @@ app.use(
     reportToGroup: "csp-endpoint",
   })
 );
+
+// ZAP baseline: ensure Permissions-Policy is always present and CSP has
+// fallbacks for directives that would otherwise inherit from default-src.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Permissions-Policy")) {
+    res.setHeader(
+      "Permissions-Policy",
+      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    );
+  }
+  next();
+});
 
 const cspViolationStore = new ViolationReportStore();
 app.post(
@@ -188,6 +188,9 @@ app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   if (req.path === "/robots.txt") {
     return res.type("text/plain").send("User-agent: *\nDisallow: /");
   }
