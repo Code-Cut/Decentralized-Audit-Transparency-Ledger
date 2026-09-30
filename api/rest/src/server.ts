@@ -56,6 +56,31 @@ app.use(
   })
 );
 
+// ZAP 10055: ensure directives with no fallback (frame-ancestors,
+// base-uri, form-action) are always defined, and ZAP 10063: set a
+// Permissions-Policy header. Applied globally so every response —
+// including /, /robots.txt, /sitemap.xml — carries them.
+app.use((_req, res, next) => {
+  const existing = res.getHeader("Content-Security-Policy");
+  const base = typeof existing === "string" ? existing : "";
+  const required = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "object-src 'none'",
+  ];
+  const missing = required.filter((d) => !base.includes(d.split(" ")[0]));
+  if (missing.length > 0) {
+    res.setHeader("Content-Security-Policy", [base, ...missing].filter(Boolean).join("; "));
+  }
+  res.setHeader(
+    "Permissions-Policy",
+    "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+  );
+  next();
+});
+
 const cspViolationStore = new ViolationReportStore();
 app.post(
   "/csp-report",
@@ -97,6 +122,18 @@ app.use(
     },
   })
 );
+
+// ZAP 10049: prevent caching of dynamic API responses. Static assets are
+// served by the frontend; every REST response here is user- or
+// state-dependent, so mark it non-storable and non-cacheable.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Cache-Control")) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  }
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  next();
+});
 
 // ── Per-client quotas with token-bucket burst handling (#444) ────────────────
 // On top of the global limiter above, each client (API key role, explicit

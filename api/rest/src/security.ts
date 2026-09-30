@@ -1,3 +1,4 @@
+import type { RequestHandler } from "express";
 import {
   AuthorizationServer,
   MemoryRateLimitStore,
@@ -9,6 +10,61 @@ import {
 } from "@audit-ledger/security";
 
 export const OAUTH_ISSUER = process.env.OAUTH_ISSUER ?? "http://localhost:3002/oauth";
+
+/**
+ * Baseline security headers required by the ZAP baseline scan. Applied to
+ * every response (including /robots.txt and /sitemap.xml) so the scanner
+ * stops reporting:
+ *   - 10055 CSP: Failure to Define Directive with No Fallback
+ *   - 10063 Permissions Policy Header Not Set
+ *   - 10037 Server Leaks Information via "X-Powered-By"
+ *   - 10049 Storable and Cacheable Content
+ *
+ * `default-src 'self'` gives every fetch directive a fallback, and the
+ * explicit `frame-ancestors`/`base-uri`/`form-action` directives cover the
+ * ones that do NOT inherit from `default-src`.
+ */
+export const securityHeaders: RequestHandler = (_req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "object-src 'none'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "connect-src 'self'",
+    ].join("; "),
+  );
+  res.setHeader(
+    "Permissions-Policy",
+    [
+      "accelerometer=()",
+      "camera=()",
+      "geolocation=()",
+      "gyroscope=()",
+      "magnetometer=()",
+      "microphone=()",
+      "payment=()",
+      "usb=()",
+    ].join(", "),
+  );
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  // ZAP 10037: strip the framework fingerprint.
+  res.removeHeader("X-Powered-By");
+  // ZAP 10049: prevent caching of API/HTML responses.
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  next();
+};
 
 /**
  * The OIDC/OAuth2 issuer. When `OIDC_JWKS_URI` is configured, deployments
