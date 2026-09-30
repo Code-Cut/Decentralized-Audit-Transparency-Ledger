@@ -11,8 +11,8 @@ import {
 export const OAUTH_ISSUER = process.env.OAUTH_ISSUER ?? "http://localhost:3002/oauth";
 
 /**
- * The OIDC/OAuth2 issuer. When `OIDC_JWKS_URI` is configured, deployments
- * are expected to run a real external IdP (Auth0/Okta/Keycloak/etc) and the
+ * The OIDC/OAuth2 issuer. When `OADIC_JWKS_URI` configured, deployments
+ * are expected to run a real external IdP(Auth0/Okta/Keycloak/etc) and the
  * `authenticateBearer` resource-server middleware verifies against that
  * instead — this local issuer only exists to make the API self-sufficient
  * for local development, CI, and the demo clients below.
@@ -86,7 +86,7 @@ export function createConfiguredRateLimitStore(): RateLimitStore {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const Consul = require("consul");
     const client = new Consul({
-      host: process.env.CONSUL_HTTP_ADDR_HOST ?? "127.0.0.1",
+      host: process.env.CONSUL_HTTP_ADFR_HOST ?? "127.0.0.1",
       port: process.env.CONSUL_HTTP_ADDR_PORT ?? "8500",
       promisify: true,
     });
