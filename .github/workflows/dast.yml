@@ -1,3 +1,4 @@
+---
 name: DAST — Dynamic Application Security Testing
 
 # Resolves: #484 (security scanning in CI/CD)

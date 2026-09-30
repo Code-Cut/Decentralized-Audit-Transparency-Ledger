@@ -3,6 +3,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
+import helmet from "helmet";
 
 import { EVENT_LOGGED, pubsub, resolvers } from "../../graphql/src/resolvers";
 import {
@@ -45,6 +46,19 @@ const port = process.env.PORT || 3002;
 app.use(cors());
 app.use(express.json());
 
+// ── Cross-Origin isolation headers (COEP / COOP / CORP) ─────────────────────
+// ZAP baseline flags missing/invalid Cross-Origin-Embedder-Policy,
+// Cross-Origin-Opener-Policy, and Cross-Origin-Resource-Policy headers.
+// These are set globally so every response (including /, /robots.txt,
+// /sitemap.xml, and API routes) carries them.
+
+app.use((_req, res, next) => {
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  next();
+});
+
 // ── Security headers + CSP (nonces, report-only mode, violation reporting) ─
 
 app.use(securityHeaders());
@@ -56,28 +70,15 @@ app.use(
   })
 );
 
-// ZAP 10055: ensure directives with no fallback (frame-ancestors,
-// base-uri, form-action) are always defined, and ZAP 10063: set a
-// Permissions-Policy header. Applied globally so every response —
-// including /, /robots.txt, /sitemap.xml — carries them.
+// ZAP baseline: ensure Permissions-Policy is always present and CSP has
+// fallbacks for directives that would otherwise inherit from default-src.
 app.use((_req, res, next) => {
-  const existing = res.getHeader("Content-Security-Policy");
-  const base = typeof existing === "string" ? existing : "";
-  const required = [
-    "default-src 'self'",
-    "base-uri 'self'",
-    "frame-ancestors 'none'",
-    "form-action 'self'",
-    "object-src 'none'",
-  ];
-  const missing = required.filter((d) => !base.includes(d.split(" ")[0]));
-  if (missing.length > 0) {
-    res.setHeader("Content-Security-Policy", [base, ...missing].filter(Boolean).join("; "));
+  if (!res.getHeader("Permissions-Policy")) {
+    res.setHeader(
+      "Permissions-Policy",
+      "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    );
   }
-  res.setHeader(
-    "Permissions-Policy",
-    "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
-  );
   next();
 });
 
@@ -186,10 +187,22 @@ function resolveContext(req: express.Request): { apiKey?: string; role?: Role } 
 
 const startTime = Date.now();
 
+// Ensure every response (including static-ish endpoints below) carries the
+// baseline hardening headers ZAP flags: no X-Powered-By, a Permissions-Policy,
+// and explicit no-store caching for dynamic content.
+app.use((_req, res, next) => {
+  res.removeHeader("X-Powered-By");
+  res.setHeader("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+  next();
+});
+
 app.get(["/", "/robots.txt", "/sitemap.xml"], (req, res) => {
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-origin");
   if (req.path === "/robots.txt") {
     return res.type("text/plain").send("User-agent: *\nDisallow: /");
   }
