@@ -1,3 +1,4 @@
+import type { RequestHandler } from "express";
 import {
   AuthorizationServer,
   MemoryRateLimitStore,

@@ -124,6 +124,18 @@ app.use(
   })
 );
 
+// ZAP 10049: prevent caching of dynamic API responses. Static assets are
+// served by the frontend; every REST response here is user- or
+// state-dependent, so mark it non-storable and non-cacheable.
+app.use((_req, res, next) => {
+  if (!res.getHeader("Cache-Control")) {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  }
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  next();
+});
+
 // ── Per-client quotas with token-bucket burst handling (#444) ────────────────
 // On top of the global limiter above, each client (API key role, explicit
 // x-quota-tier header, or "default") gets its own token bucket with burst

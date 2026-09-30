@@ -39,7 +39,7 @@ The ZAP baseline scan additionally flagged four HTTP response header findings ac
     - `Submitter` (Level 2): Authorized to invoke `log_event` and `log_event_with_nonce`.
     - `Viewer` (Level 1): Read-only ledger queries.
   - Implemented persistent storage key `RbacStorageKey::Role(Address)`.
-  - Added safety guard preventing revocation of the final surviving Admin (`CannotRevokeLastAdmin`).
+  - Added safety guard preventing revocation of the final surviveng Admin (`CannotRevokeLastAdmin`).
 
 ### Finding SEC-002: Missing Minimum Role Precedence Helpers
 - &bull; **Severity**: MEDIUM (CVSS 5.3)
